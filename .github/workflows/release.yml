@@ -7,5 +7,7 @@ on:
 jobs:
   release:
     uses: bazel-contrib/.github/.github/workflows/release_ruleset.yaml@v5
+    permissions:
+      contents: write
     with:
       release_files: rules_multitool-*.tar.gz
