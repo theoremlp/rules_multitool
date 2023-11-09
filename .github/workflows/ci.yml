@@ -21,8 +21,7 @@ jobs:
         [
           {"folder": ".", "bzlmodEnabled": false},
           {"bazelversion": "5.4.0", "bzlmodEnabled": true},
-          {"bazelversion": "5.4.0", "os": "macos-latest"},
-          {"bazelversion": "5.4.0", "os": "windows-latest"},
+          {"bazelversion": "5.4.0"},
         ]
       # this ruleset only supports linux and macos
       exclude_windows: true
