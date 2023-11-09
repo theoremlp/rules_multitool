@@ -24,5 +24,4 @@ bazel_dep(name = "rules_multilint", version = "${TAG:1}")
 \`\`\`
 EOF
 
-awk 'f;/--SNIP--/{f=1}' e2e/smoke/WORKSPACE.bazel
 echo "\`\`\`" 
