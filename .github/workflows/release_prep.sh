@@ -6,8 +6,8 @@
 set -o errexit -o nounset -o pipefail
 
 TAG="${GITHUB_REF_NAME}"
-PREFIX="rules_multilint-${TAG:1}"
-ARCHIVE="rules_multilint-${TAG}.tar.gz"
+PREFIX="rules_multitool-${TAG:1}"
+ARCHIVE="rules_multitool-${TAG}.tar.gz"
 
 git archive --format=tar --prefix=${PREFIX}/ ${TAG} | gzip > $ARCHIVE
 SHA=$(shasum -a 256 $ARCHIVE | awk '{print $1}')
@@ -19,6 +19,6 @@ cat << EOF
 2. Add to your \`MODULE.bazel\` file:
 
 \`\`\`starlark
-bazel_dep(name = "rules_multilint", version = "${TAG:1}")
+bazel_dep(name = "rules_multitool", version = "${TAG:1}")
 \`\`\`
 EOF
