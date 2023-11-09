@@ -1,0 +1,6 @@
+load(":tool.bzl", "tool")
+
+tool(
+    name = "tool",
+    visibility = ["//visibility:public"],
+)

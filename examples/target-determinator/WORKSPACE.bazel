@@ -1,0 +1,30 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+load("@rules_multitool//multitool:multitool.bzl", "multitool")
+
+http_file(
+    name = "target_determinator_linux_x86_64",
+    executable = True,
+    sha256 = "c8a09143e9fe6eccc4b27a6be92c5929e5a78034a8d0b4c43dbed4ee539ec903",
+    urls = ["https://github.com/bazel-contrib/target-determinator/releases/download/v0.25.0/target-determinator.linux.amd64"],
+)
+
+http_file(
+    name = "target_determinator_macos_arm64",
+    executable = True,
+    sha256 = "8f975b471c4a51d32781b757e1ece9700221bfd4c0ea507c18fa382360d1111f",
+    urls = ["https://github.com/bazel-contrib/target-determinator/releases/download/v0.25.0/target-determinator.darwin.arm64"],
+)
+
+http_file(
+    name = "target_determinator_macos_x86_64",
+    executable = True,
+    sha256 = "8c7245603dede429b978e214ca327c3f3d686a1bc712c1298fca0396a0f25f23",
+    urls = ["https://github.com/bazel-contrib/target-determinator/releases/download/v0.25.0/target-determinator.darwin.amd64"],
+)
+
+multitool(
+    name = "target-determinator",
+    linux_x86_64_binary = "@target_determinator_linux_x86_64//file",
+    macos_arm64_binary = "@target_determinator_macos_arm64//file",
+    macos_x86_64_binary = "@target_determinator_macos_x86_64//file",
+)

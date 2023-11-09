@@ -1,0 +1,28 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v5
+    with:
+      folders: |
+        [
+          ".",
+          "examples/target-determinator"
+        ]
+      exclude: |
+        [
+          {"folder": ".", "bzlmodEnabled": false},
+          {"bazelversion": "5.4.0", "bzlmodEnabled": true},
+          {"bazelversion": "5.4.0", "os": "macos-latest"},
+          {"bazelversion": "5.4.0", "os": "windows-latest"},
+        ]
+      # this ruleset only supports linux and macos
+      exclude_windows: true

@@ -1,0 +1,13 @@
+"multitool example using target-determinator"
+
+module(
+    name = "multitool_examples__target_determinator",
+    version = "0.0.0",
+    compatibility_level = 1,
+)
+
+bazel_dep(name = "rules_multitool", version = "0.0.0")
+local_path_override(
+    module_name = "rules_multitool",
+    path = "../..",
+)

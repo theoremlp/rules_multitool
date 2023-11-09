@@ -1,0 +1,3 @@
+"Module for toolchain {name}"
+
+module(name = "{name}")

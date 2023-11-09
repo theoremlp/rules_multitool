@@ -1,0 +1,22 @@
+load("//toolchain_type:toolchain_type.bzl", "TOOLCHAIN_TYPE")
+load("//:toolchain_info.bzl", "toolchain_info")
+
+PLATFORMS = [
+    "@platforms//cpu:arm64",
+    "@platforms//os:linux",
+]
+
+toolchain_info(
+    name = "toolchain",
+    cpu = "arm64",
+    {linux_arm64_binary}
+    os = "linux",
+)
+
+toolchain(
+    name = "arm64",
+    exec_compatible_with = PLATFORMS,
+    target_compatible_with = PLATFORMS,
+    toolchain = ":toolchain",
+    toolchain_type = TOOLCHAIN_TYPE,
+)
