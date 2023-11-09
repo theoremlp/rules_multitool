@@ -11,3 +11,4 @@ jobs:
       contents: write
     with:
       release_files: rules_multitool-*.tar.gz
+      prerelease: false
