@@ -7,7 +7,10 @@ set -o errexit -o nounset -o pipefail
 
 TAG="${GITHUB_REF_NAME}"
 PREFIX="rules_multitool-${TAG:1}"
-ARCHIVE="rules_multitool-${TAG}.tar.gz"
+ARCHIVE="rules_multitool-${TAG:1}.tar.gz"
+
+# embed version in MODULE.bazel
+sed -i "s/version = \"0\.0\.0\"/version = \"${TAG:1}\"/" MODULE.bazel
 
 git archive --format=tar --prefix=${PREFIX}/ ${TAG} | gzip > $ARCHIVE
 SHA=$(shasum -a 256 $ARCHIVE | awk '{print $1}')
