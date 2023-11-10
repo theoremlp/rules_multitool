@@ -12,7 +12,9 @@ ARCHIVE="rules_multitool-${TAG:1}.tar.gz"
 # embed version in MODULE.bazel
 perl -pi -e "s/version = \"0\.0\.0\",/version = \"${TAG:1}\",/g" MODULE.bazel
 
-git archive --format=tar --prefix=${PREFIX}/ ${TAG} | gzip > $ARCHIVE
+stash_name=`git stash create`;
+git archive --format=tar --prefix=${PREFIX}/ "${stash_name}" | gzip > $ARCHIVE
+
 SHA=$(shasum -a 256 $ARCHIVE | awk '{print $1}')
 
 cat << EOF
