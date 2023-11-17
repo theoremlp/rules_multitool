@@ -4,7 +4,7 @@ An ergonomic approach to defining a single tool target that resolves to a matchi
 
 ## Usage
 
-For a quickstart, see the [target-determinator example](examples/workspace_target-determinator/).
+For a quickstart, see the [target-determinator example](examples/target-determinator/).
 
 Load the ruleset in your **MODULE.bazel**:
 
