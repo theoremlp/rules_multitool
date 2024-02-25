@@ -1,7 +1,7 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier", "buildifier_test")
 
 exports_files([
-    "WORKSPACE.bazel",  # used by buildifier to locate the root of the sandbox
+    "WORKSPACE.bazel",
 ])
 
 buildifier(

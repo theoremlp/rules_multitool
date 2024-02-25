@@ -1,0 +1,84 @@
+{
+  "target-determinator": {
+      "binaries": [
+          {
+              "kind": "file",
+              "url": "https://github.com/bazel-contrib/target-determinator/releases/download/v0.25.0/target-determinator.darwin.amd64",
+              "sha256": "8c7245603dede429b978e214ca327c3f3d686a1bc712c1298fca0396a0f25f23",
+              "os": "macos",
+              "cpu": "x86_64"
+          },
+          {
+              "kind": "file",
+              "url": "https://github.com/bazel-contrib/target-determinator/releases/download/v0.25.0/target-determinator.darwin.arm64",
+              "sha256": "8f975b471c4a51d32781b757e1ece9700221bfd4c0ea507c18fa382360d1111f",
+              "os": "macos",
+              "cpu": "arm64"
+          },
+          {
+              "kind": "file",
+              "url": "https://github.com/bazel-contrib/target-determinator/releases/download/v0.25.0/target-determinator.linux.amd64",
+              "sha256": "c8a09143e9fe6eccc4b27a6be92c5929e5a78034a8d0b4c43dbed4ee539ec903",
+              "os": "linux",
+              "cpu": "x86_64"
+          }
+      ]
+  },
+  "gh": {
+    "binaries": [
+        {
+            "kind": "archive",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_macOS_amd64.zip",
+            "sha256": "1c545505b5b88feaffeba00b7284ccac3f2002b67461b1246eaec827eb07c31b",
+            "file": "gh_2.44.1_macOS_amd64/bin/gh",
+            "os": "macos",
+            "cpu": "x86_64"
+        },
+        {
+            "kind": "archive",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_macOS_amd64.zip",
+            "sha256": "1c545505b5b88feaffeba00b7284ccac3f2002b67461b1246eaec827eb07c31b",
+            "file": "gh_2.44.1_macOS_amd64/bin/gh",
+            "os": "macos",
+            "cpu": "arm64"
+        },
+        {
+            "kind": "archive",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_linux_amd64.tar.gz",
+            "sha256": "f11eefb646768e3f53e2185f6d3b01b4cb02112c2c60e65a4b5875150287ff97",
+            "file": "gh_2.44.1_linux_amd64/bin",
+            "os": "linux",
+            "cpu": "x86_64"
+        }
+    ]
+  },
+  "aws": {
+    "binaries": [
+        {
+            "kind": "pkg",
+            "url": "https://awscli.amazonaws.com/AWSCLIV2-2.8.4.pkg",
+            "sha256": "df0df526521a5b6c38b6954ec08c16453916daacca83582d37582654e9ca05a3",
+            "file": "aws-cli.pkg/Payload/aws-cli/aws",
+            "os": "macos",
+            "cpu": "x86_64"
+        },
+        {
+            "kind": "pkg",
+            "url": "https://awscli.amazonaws.com/AWSCLIV2-2.8.4.pkg",
+            "sha256": "df0df526521a5b6c38b6954ec08c16453916daacca83582d37582654e9ca05a3",
+            "file": "aws-cli.pkg/Payload/aws-cli/aws",
+            "os": "macos",
+            "cpu": "amd64"
+        },
+        {
+            "kind": "archive",
+            "url": "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.8.4.zip",
+            "sha256": "d23b59d08c129daeda7535051eaa082e139cc14d243995aa754d4b250b9c9329",
+            "file": "aws/dist/aws",
+            "os": "linux",
+            "cpu": "x86_64"
+        }
+
+    ]
+  }
+}

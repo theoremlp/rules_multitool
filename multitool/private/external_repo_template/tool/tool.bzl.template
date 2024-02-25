@@ -1,9 +1,0 @@
-load("//toolchain_type:toolchain_type.bzl", "TOOLCHAIN_TYPE")
-
-def _tool_impl(ctx):
-    toolchain = ctx.toolchains[TOOLCHAIN_TYPE]
-    output = ctx.actions.declare_file(ctx.label.name)
-    ctx.actions.symlink(output = output, target_file = toolchain.executable)
-    return [DefaultInfo(executable = output)]
-
-tool = rule(executable = True, implementation = _tool_impl, toolchains = [TOOLCHAIN_TYPE])

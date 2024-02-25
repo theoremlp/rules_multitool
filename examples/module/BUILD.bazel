@@ -1,3 +1,7 @@
+exports_files(
+    ["multitool.lock.json"],
+)
+
 sh_test(
     name = "integration_test",
     srcs = ["integration_test.sh"],

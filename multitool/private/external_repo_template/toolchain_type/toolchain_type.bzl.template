@@ -1,1 +1,0 @@
-TOOLCHAIN_TYPE = "@{name}//toolchain_type"
