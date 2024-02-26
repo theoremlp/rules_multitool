@@ -68,7 +68,7 @@
             "sha256": "df0df526521a5b6c38b6954ec08c16453916daacca83582d37582654e9ca05a3",
             "file": "aws-cli.pkg/Payload/aws-cli/aws",
             "os": "macos",
-            "cpu": "amd64"
+            "cpu": "arm64"
         },
         {
             "kind": "archive",
