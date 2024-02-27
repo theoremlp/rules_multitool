@@ -1,7 +1,7 @@
 load("@buildifier_prebuilt//:rules.bzl", "buildifier", "buildifier_test")
 
 exports_files([
-    "WORKSPACE.bazel",  # used by buildifier to locate the root of the sandbox
+    "MODULE.bazel",
 ])
 
 buildifier(
@@ -18,5 +18,5 @@ buildifier_test(
     lint_mode = "warn",
     mode = "diff",
     no_sandbox = True,
-    workspace = "//:WORKSPACE.bazel",
+    workspace = "//:MODULE.bazel",
 )

@@ -1,0 +1,18 @@
+"multitool example using target-determinator"
+
+module(
+    name = "multitool_examples__target_determinator",
+    version = "0.0.0",
+    compatibility_level = 1,
+)
+
+bazel_dep(name = "platforms", version = "0.0.8")
+bazel_dep(name = "rules_multitool", version = "0.0.0")
+local_path_override(
+    module_name = "rules_multitool",
+    path = "../..",
+)
+
+multitool = use_extension("@rules_multitool//multitool:extension.bzl", "multitool")
+multitool.hub(lockfile = "//:multitool.lock.json")
+use_repo(multitool, "multitool")

@@ -15,13 +15,15 @@ jobs:
       folders: |
         [
           ".",
+          "examples/module",
           "examples/target-determinator"
         ]
-      # we only support Bazel 6, and only with bzlmod enabled
+      # we only support Bazel 7, and only with bzlmod enabled
       exclude: |
         [
           {"bzlmodEnabled": false},
           {"bazelversion": "5.4.0"},
+          {"bazelversion": "6.4.0"},
         ]
       # this ruleset only supports linux and macos
       exclude_windows: true
