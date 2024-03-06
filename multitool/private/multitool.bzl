@@ -24,6 +24,26 @@ def _check(condition, message):
     if not condition:
         fail(message)
 
+def _match_os(rctx, os):
+    # rctx.os.name takes valeus from Java system property `os.name`
+    if os == "macos" and rctx.os.name.startswith("mac"):
+        return True
+    if os == "linux" and rctx.os.name == "linux":
+        return True
+    return False
+
+def _match_cpu(rctx, cpu):
+    # rctx.os.arch takes valeus from Java system property `os.arch`
+    if cpu == "x86_64" and rctx.os.arch == "x86_64":
+        return True
+    if cpu == "arm64" and rctx.os.arch == "aarch64":
+        return True
+    return False
+
+def _match_local(rctx, os, cpu):
+    "Returns True iff os and cpu match local environment"
+    return _match_os(rctx, os) and _match_cpu(rctx, cpu)
+
 def _multitool_hub_impl(rctx):
     tools = {}
     for lockfile in rctx.attr.lockfiles:
@@ -42,6 +62,9 @@ def _multitool_hub_impl(rctx):
         for binary in tool["binaries"]:
             _check(binary["os"] in ["linux", "macos"], "Unknown os '{os}'".format(os = binary["os"]))
             _check(binary["cpu"] in ["x86_64", "arm64"], "Unknown cpu '{cpu}'".format(cpu = binary["cpu"]))
+
+            if not _match_local(rctx, binary["os"], binary["cpu"]):
+                continue
 
             target_executable = "tools/{tool_name}/{os}_{cpu}_executable".format(
                 tool_name = tool_name,
