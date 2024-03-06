@@ -30,7 +30,7 @@ def _match_os(rctx, os):
         return True
     if os == "linux" and rctx.os.name == "Linux":
         return True
-    print("Unknown OS " + os)
+    print("Unknown OS " + rctx.os.name)
     return False
 
 def _match_cpu(rctx, cpu):
@@ -39,7 +39,7 @@ def _match_cpu(rctx, cpu):
         return True
     if cpu == "arm64" and rctx.os.arch == "aarch64":
         return True
-    print("Unknown CPU " + cpu)
+    print("Unknown CPU " + rctx.os.arch)
     return False
 
 def _match_local(rctx, os, cpu):
