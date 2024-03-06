@@ -28,13 +28,13 @@ def _match_os(rctx, os):
     # rctx.os.name takes values from Java system property `os.name`
     if os == "macos" and rctx.os.name.startswith("mac"):
         return True
-    if os == "linux" and rctx.os.name.lower() == "linux":
+    if os == "linux" and rctx.os.name == "Linux":
         return True
     return False
 
 def _match_cpu(rctx, cpu):
     # rctx.os.arch takes values from Java system property `os.arch`
-    if cpu == "x86_64" and rctx.os.arch == "x86_64":
+    if cpu == "x86_64" and rctx.os.arch in ["x86_64", "amd64"]:
         return True
     if cpu == "arm64" and rctx.os.arch == "aarch64":
         return True
