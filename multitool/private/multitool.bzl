@@ -28,7 +28,7 @@ def _match_os(rctx, os):
     # rctx.os.name takes valeus from Java system property `os.name`
     if os == "macos" and rctx.os.name.startswith("mac"):
         return True
-    if os == "linux" and rctx.os.name == "linux":
+    if os == "linux" and rctx.os.name.lower() == "linux":
         return True
     return False
 
