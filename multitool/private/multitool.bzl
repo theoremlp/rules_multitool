@@ -37,8 +37,11 @@ def _multitool_hub_impl(rctx):
     defines = []
 
     for tool_name, tool in tools.items():
-        toolchains = []
+        # A special key says this JSON document conforms to a schema
+        if tool_name == "$schema":
+            continue
 
+        toolchains = []
         for binary in tool["binaries"]:
             _check(binary["os"] in ["linux", "macos"], "Unknown os '{os}'".format(os = binary["os"]))
             _check(binary["cpu"] in ["x86_64", "arm64"], "Unknown cpu '{cpu}'".format(cpu = binary["cpu"]))
