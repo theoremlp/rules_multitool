@@ -69,7 +69,7 @@ def _load_tools(rctx):
 
     # a special key says this JSON document conforms to a schema
     tools.pop("$schema", None)
-        
+
     # validation
     for tool_name, tool in tools.items():
         for binary in tool["binaries"]:
