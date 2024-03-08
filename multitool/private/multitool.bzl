@@ -158,13 +158,16 @@ _env_specific_tools = repository_rule(
     implementation = _env_specific_tools_impl,
 )
 
+def _sort_fn(tup):
+    return tup[0]
+
 def _multitool_hub_impl(rctx):
     tools = _load_tools(rctx)
 
     loads = []
     defines = []
 
-    for tool_name, tool in tools.items():
+    for tool_name, tool in sorted(tools.items(), key = _sort_fn):
         toolchains = []
 
         for binary in tool["binaries"]:
@@ -188,9 +191,9 @@ def _multitool_hub_impl(rctx):
         defines.append("declare_{clean_name}_toolchains()".format(clean_name = clean_name))
 
     templates.hub(rctx, "BUILD.bazel")
-    templates(rctx, "toolchain_info.bzl")
-    templates(rctx, "tools/BUILD.bazel")
-    templates(rctx, "toolchains/BUILD.bazel", {
+    templates.hub(rctx, "toolchain_info.bzl")
+    templates.hub(rctx, "tools/BUILD.bazel")
+    templates.hub(rctx, "toolchains/BUILD.bazel", {
         "{loads}": "\n".join(loads),
         "{defines}": "\n".join(defines),
     })
