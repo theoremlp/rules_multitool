@@ -27,3 +27,9 @@ jobs:
         ]
       # this ruleset only supports linux and macos
       exclude_windows: true
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - working-directory: examples/target-determinator
+        run: ./minimal_download_test.sh
