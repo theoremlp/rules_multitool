@@ -1,10 +1,50 @@
-"multitool hub implementation"
+"""
+multitool
 
-_ENV_TEMPLATE = "//multitool/private:env_repo_template/{filename}.template"
-_ENV_TOOL_TEMPLATE = "//multitool/private:env_repo_tool_template/{filename}.template"
+Multitool takes as input a JSON lockfile and emits the following repos:
 
-_HUB_TEMPLATE = "//multitool/private:hub_repo_template/{filename}.template"
-_HUB_TOOL_TEMPLATE = "//multitool/private:hub_repo_tool_template/{filename}.template"
+ - [hub].[os]_[cpu], for each [os]/[cpu] combo in _SUPPORTED_ENVS:
+     This repository holds os/cpu specific binaries for all tools in the provided
+     lockfile(s) and constructs clean symlinks to their content for inclusion in
+     toolchains defined in the [hub] repo.
+
+     The structure of this repo is, very simply:
+       tools/
+         [tool-name]/
+           BUILD.bazel            (export all *_executable files)
+           [os]_[cpu]_executable  (a downloaded file or a symlink to a file in a
+                                   downloaded and extracted archive)
+
+ - [hub]:
+     This repository holds toolchain definitions for all tools in the provided
+     lockfile(s), as well as an executable tool target that will pick the
+     appropriate toolchain.
+
+     The structure of this repo is:
+       toolchains/
+         BUILD.bazel      (a single file containing all declared toolchains for easy registration)
+       tools/
+         [tool-name]/
+           BUILD.bazel    (declares the toolchain_type and the executable tool target)
+           tool.bzl       (scaffolding for the tool target and toolchain declarations in toolchains/BUILD.bazel)
+       toolchain_info.bzl (common scaffolding for toolchain declarations)
+
+       (additional BUILD.bazel and a WORKSPACE file are included as required by Bazel)
+
+To keep things orderly, we keep all the toolchain Bazel goo in the [hub] repo and only stash
+the binaries in the [hub].[os]_[cpu] repos. It's a conscious decision not to place some fragments
+of the toolchain definitions in the latter repos to make the dependencies run exactly one way:
+[hub] -> [hub].[os]_[cpu].
+
+This implementation depends on rendering a number of templates, which are defined in sibling
+folders and managed by the templates starlark file.
+
+To maintain support both bzlmod and non-bzlmod setups, we provide two entrypoints to the rule:
+ - (bzlmod)     hub       : invoked by the hub tag in extension.bzl
+ - (non-bzlmod) multitool : invoked in WORKSPACE or related macros, and additionally registers toolchains
+"""
+
+load(":templates.bzl", "templates")
 
 _SUPPORTED_ENVS = [
     ("linux", "arm64"),
@@ -13,44 +53,12 @@ _SUPPORTED_ENVS = [
     ("macos", "x86_64"),
 ]
 
-def _render_env(rctx, filename, substitutions = None):
-    rctx.template(
-        filename,
-        Label(_ENV_TEMPLATE.format(filename = filename)),
-        substitutions = substitutions or {},
-    )
-
-def _render_env_tool(rctx, tool_name, filename, substitutions = None):
-    rctx.template(
-        "tools/{tool_name}/{filename}".format(tool_name = tool_name, filename = filename),
-        Label(_ENV_TOOL_TEMPLATE.format(filename = filename)),
-        substitutions = {
-            "{name}": tool_name,
-        } | (substitutions or {}),
-    )
-
-def _render_hub(rctx, filename, substitutions = None):
-    rctx.template(
-        filename,
-        Label(_HUB_TEMPLATE.format(filename = filename)),
-        substitutions = substitutions or {},
-    )
-
-def _render_hub_tool(rctx, tool_name, filename, substitutions = None):
-    rctx.template(
-        "tools/{tool_name}/{filename}".format(tool_name = tool_name, filename = filename),
-        Label(_HUB_TOOL_TEMPLATE.format(filename = filename)),
-        substitutions = {
-            "{name}": tool_name,
-        } | (substitutions or {}),
-    )
-
 def _check(condition, message):
     "fails iff condition is False and emits message"
     if not condition:
         fail(message)
 
-def _env_specific_tools_impl(rctx):
+def _load_tools(rctx):
     tools = {}
     for lockfile in rctx.attr.lockfiles:
         # TODO: validate no conflicts from multiple hub declarations and/or
@@ -58,6 +66,17 @@ def _env_specific_tools_impl(rctx):
         #  to use constraints to pick the right one.
         #  (this is also a very naive merge at the tool level)
         tools = tools | json.decode(rctx.read(lockfile))
+
+    # validation
+    for tool_name, tool in tools.items():
+        for binary in tool["binaries"]:
+            _check(binary["os"] in ["linux", "macos"], "{tool_name}: Unknown os '{os}'".format(tool_name = tool_name, os = binary["os"]))
+            _check(binary["cpu"] in ["x86_64", "arm64"], "Unknown cpu '{cpu}'".format(cpu = binary["cpu"]))
+
+    return tools
+
+def _env_specific_tools_impl(rctx):
+    tools = _load_tools(rctx)
 
     for tool_name, tool in tools.items():
         for binary in tool["binaries"]:
@@ -125,10 +144,10 @@ def _env_specific_tools_impl(rctx):
             else:
                 fail("Unknown 'kind' {kind}".format(kind = binary["kind"]))
 
-            _render_env_tool(rctx, tool_name, "BUILD.bazel")
+            templates.env_tool(rctx, tool_name, "BUILD.bazel")
 
-    _render_env(rctx, "tools/BUILD.bazel")
-    _render_env(rctx, "BUILD.bazel")
+    templates.env(rctx, "tools/BUILD.bazel")
+    templates.env(rctx, "BUILD.bazel")
 
 _env_specific_tools = repository_rule(
     attrs = {
@@ -140,13 +159,7 @@ _env_specific_tools = repository_rule(
 )
 
 def _multitool_hub_impl(rctx):
-    tools = {}
-    for lockfile in rctx.attr.lockfiles:
-        # TODO: validate no conflicts from multiple hub declarations and/or
-        #  fix toolchains to also declare their versions and enable consumers
-        #  to use constraints to pick the right one.
-        #  (this is also a very naive merge at the tool level)
-        tools = tools | json.decode(rctx.read(lockfile))
+    tools = _load_tools(rctx)
 
     loads = []
     defines = []
@@ -155,17 +168,14 @@ def _multitool_hub_impl(rctx):
         toolchains = []
 
         for binary in tool["binaries"]:
-            _check(binary["os"] in ["linux", "macos"], "Unknown os '{os}'".format(os = binary["os"]))
-            _check(binary["cpu"] in ["x86_64", "arm64"], "Unknown cpu '{cpu}'".format(cpu = binary["cpu"]))
-
             toolchains.append('\n    _declare_toolchain(name="{name}", os="{os}", cpu="{cpu}")'.format(
                 name = tool_name,
                 cpu = binary["cpu"],
                 os = binary["os"],
             ))
 
-        _render_hub_tool(rctx, tool_name, "BUILD.bazel")
-        _render_hub_tool(rctx, tool_name, "tool.bzl", {
+        templates.hub_tool(rctx, tool_name, "BUILD.bazel")
+        templates.hub_tool(rctx, tool_name, "tool.bzl", {
             "{hub_name}": rctx.attr.name,
             "{toolchains}": "\n".join(toolchains),
         })
@@ -177,10 +187,10 @@ def _multitool_hub_impl(rctx):
         ))
         defines.append("declare_{clean_name}_toolchains()".format(clean_name = clean_name))
 
-    _render_hub(rctx, "BUILD.bazel")
-    _render_hub(rctx, "toolchain_info.bzl")
-    _render_hub(rctx, "tools/BUILD.bazel")
-    _render_hub(rctx, "toolchains/BUILD.bazel", {
+    templates.hub(rctx, "BUILD.bazel")
+    templates(rctx, "toolchain_info.bzl")
+    templates(rctx, "tools/BUILD.bazel")
+    templates(rctx, "toolchains/BUILD.bazel", {
         "{loads}": "\n".join(loads),
         "{defines}": "\n".join(defines),
     })
