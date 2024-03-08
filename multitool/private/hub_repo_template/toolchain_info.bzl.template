@@ -17,3 +17,31 @@ toolchain_info = rule(
     ),
     implementation = _toolchain_info_impl,
 )
+
+def declare_toolchain(name, os, cpu, toolchain_type):
+    toolchain_info(
+        name = "{name}_{os}_{cpu}_toolchain_info".format(name=name, os=os, cpu=cpu),
+        executable = "@@{hub_name}.{os}_{cpu}//tools/{name}:{os}_{cpu}_executable".format(name=name, os=os, cpu=cpu),
+        os = os,
+        cpu = cpu,
+    )
+
+    native.toolchain(
+        name = "{name}_{os}_{cpu}_toolchain_exec".format(name=name, os=os, cpu=cpu),
+        toolchain = ":{name}_{os}_{cpu}_toolchain_info".format(name=name, os=os, cpu=cpu),
+        toolchain_type = toolchain_type,
+        exec_compatible_with = [
+            "@platforms//cpu:{cpu}".format(cpu=cpu),
+            "@platforms//os:{os}".format(os=os),
+        ],
+    )
+
+    native.toolchain(
+        name = "{name}_{os}_{cpu}_toolchain_target".format(name=name, os=os, cpu=cpu),
+        toolchain = ":{name}_{os}_{cpu}_toolchain_info".format(name=name, os=os, cpu=cpu),
+        toolchain_type = toolchain_type,
+        target_compatible_with = [
+            "@platforms//cpu:{cpu}".format(cpu=cpu),
+            "@platforms//os:{os}".format(os=os),
+        ],
+    )
