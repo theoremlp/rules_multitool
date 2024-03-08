@@ -1,4 +1,5 @@
 {
+  "$schema": "../../lockfile.schema.json",
   "target-determinator": {
       "binaries": [
           {
