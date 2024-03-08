@@ -70,8 +70,20 @@ def _load_tools(rctx):
     # validation
     for tool_name, tool in tools.items():
         for binary in tool["binaries"]:
-            _check(binary["os"] in ["linux", "macos"], "{tool_name}: Unknown os '{os}'".format(tool_name = tool_name, os = binary["os"]))
-            _check(binary["cpu"] in ["x86_64", "arm64"], "Unknown cpu '{cpu}'".format(cpu = binary["cpu"]))
+            _check(
+                binary["os"] in ["linux", "macos"],
+                "{tool_name}: Unknown os '{os}'".format(
+                    tool_name = tool_name,
+                    os = binary["os"],
+                ),
+            )
+            _check(
+                binary["cpu"] in ["x86_64", "arm64"],
+                "{tool_name}: Unknown cpu '{cpu}'".format(
+                    tool_name = tool_name,
+                    cpu = binary["cpu"],
+                ),
+            )
 
     return tools
 
