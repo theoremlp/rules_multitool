@@ -72,7 +72,6 @@ def _load_tools(rctx):
         
     # validation
     for tool_name, tool in tools.items():
-        toolchains = []
         for binary in tool["binaries"]:
             _check(
                 binary["os"] in ["linux", "macos"],
