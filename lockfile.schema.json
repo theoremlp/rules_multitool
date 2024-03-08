@@ -1,0 +1,41 @@
+{
+    "$id": "https://github.com/theoremlp/rules_multitool/lockfile.schema.json",
+    "title": "Describes binaries and instructions for fetching them under Bazel",
+    "type": "object",
+    "properties": {
+      "$schema": { "type": "string" }
+    },
+    "additionalProperties": {
+        "type": "object",
+        "properties": {
+            "binaries": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "kind": {
+                            "enum": ["file", "archive", "pkg"]
+                        },
+                        "url": {
+                            "type": "string"
+                        },
+                        "file": {
+                            "type": "string",
+                            "description": "when kind is archive or pkg, relative path to the binary within it"
+                        },
+                        "sha256": {
+                            "type": "string"
+                        },
+                        "os": {
+                            "enum": ["macos", "linux"]
+                        },
+                        "cpu": {
+                            "enum": ["x86_64", "arm64"]
+                        }
+                    },
+                    "additionalProperties": false
+                }   
+            }
+        }
+    }
+}

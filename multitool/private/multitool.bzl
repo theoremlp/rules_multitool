@@ -67,6 +67,9 @@ def _load_tools(rctx):
         #  (this is also a very naive merge at the tool level)
         tools = tools | json.decode(rctx.read(lockfile))
 
+    # a special key says this JSON document conforms to a schema
+    tools.pop("$schema", None)
+
     # validation
     for tool_name, tool in tools.items():
         for binary in tool["binaries"]:
