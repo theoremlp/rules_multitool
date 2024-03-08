@@ -21,14 +21,20 @@ def _declare_toolchain(name, os, cpu):
     )
 
     native.toolchain(
-        name = "{name}_{os}_{cpu}_toolchain".format(name=name, os=os, cpu=cpu),
+        name = "{name}_{os}_{cpu}_toolchain_exec".format(name=name, os=os, cpu=cpu),
         toolchain = ":{name}_{os}_{cpu}_toolchain_info".format(name=name, os=os, cpu=cpu),
         toolchain_type = _TOOLCHAIN_TYPE,
         exec_compatible_with = [
             "@platforms//cpu:{cpu}".format(cpu=cpu),
             "@platforms//os:{os}".format(os=os),
         ],
-        target_compatible_with = [
+    )
+
+    native.toolchain(
+        name = "{name}_{os}_{cpu}_toolchain_target".format(name=name, os=os, cpu=cpu),
+        toolchain = ":{name}_{os}_{cpu}_toolchain_info".format(name=name, os=os, cpu=cpu),
+        toolchain_type = _TOOLCHAIN_TYPE,
+        exec_compatible_with = [
             "@platforms//cpu:{cpu}".format(cpu=cpu),
             "@platforms//os:{os}".format(os=os),
         ],
