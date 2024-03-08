@@ -186,7 +186,7 @@ def _multitool_hub_impl(rctx):
         toolchains = []
 
         for binary in tool["binaries"]:
-            toolchains.append('\n    _declare_toolchain(name="{name}", os="{os}", cpu="{cpu}")'.format(
+            toolchains.append('\n    declare_toolchain(name="{name}", os="{os}", cpu="{cpu}", toolchain_type=_TOOLCHAIN_TYPE)'.format(
                 name = tool_name,
                 cpu = binary["cpu"],
                 os = binary["os"],
@@ -194,7 +194,6 @@ def _multitool_hub_impl(rctx):
 
         templates.hub_tool(rctx, tool_name, "BUILD.bazel")
         templates.hub_tool(rctx, tool_name, "tool.bzl", {
-            "{hub_name}": rctx.attr.name,
             "{toolchains}": "\n".join(toolchains),
         })
 
@@ -206,7 +205,9 @@ def _multitool_hub_impl(rctx):
         defines.append("declare_{clean_name}_toolchains()".format(clean_name = clean_name))
 
     templates.hub(rctx, "BUILD.bazel")
-    templates.hub(rctx, "toolchain_info.bzl")
+    templates.hub(rctx, "toolchain_info.bzl", {
+        "{hub_name}": rctx.attr.name,
+    })
     templates.hub(rctx, "tools/BUILD.bazel")
     templates.hub(rctx, "toolchains/BUILD.bazel", {
         "{loads}": "\n".join(loads),
