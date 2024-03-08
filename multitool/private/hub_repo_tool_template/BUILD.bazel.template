@@ -2,8 +2,6 @@
 
 load(":tool.bzl", "tool")
 
-exports_files(glob(include=["*_executable"]))
-
 toolchain_type(
     name = "toolchain_type",
     visibility = ["//:__subpackages__"],
