@@ -10,6 +10,7 @@ Define a lockfile that references the tools to load:
 
 ```json
 {
+  "$schema": "https://raw.githubusercontent.com/theoremlp/rules_multitool/main/lockfile.schema.json",
   "tool-name": {
     "binaries": [
       {
