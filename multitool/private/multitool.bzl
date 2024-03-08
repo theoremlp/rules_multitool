@@ -166,6 +166,7 @@ def _multitool_hub_impl(rctx):
 
         _render_hub_tool(rctx, tool_name, "BUILD.bazel")
         _render_hub_tool(rctx, tool_name, "tool.bzl", {
+            "{hub_name}": rctx.attr.name,
             "{toolchains}": "\n".join(toolchains),
         })
 
@@ -205,4 +206,4 @@ def hub(name, lockfiles):
 def multitool(name, lockfile):
     "(non-bzlmod) Create a multitool hub and register its toolchains."
     hub(name, [lockfile])
-    native.register_toolchains("@multitool//toolchains:all")
+    native.register_toolchains("@{name}//toolchains:all".format(name = name))

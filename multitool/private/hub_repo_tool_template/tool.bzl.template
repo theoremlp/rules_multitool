@@ -15,7 +15,7 @@ tool = rule(executable = True, implementation = _tool_impl, toolchains = [_TOOLC
 def _declare_toolchain(name, os, cpu):
     toolchain_info(
         name = "{name}_{os}_{cpu}_toolchain_info".format(name=name, os=os, cpu=cpu),
-        executable = "@multitool.{os}_{cpu}//tools/{name}:{os}_{cpu}_executable".format(name=name, os=os, cpu=cpu),
+        executable = "@{hub_name}.{os}_{cpu}//tools/{name}:{os}_{cpu}_executable".format(name=name, os=os, cpu=cpu),
         os = os,
         cpu = cpu,
     )
