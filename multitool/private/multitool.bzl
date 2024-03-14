@@ -233,6 +233,16 @@ def hub(name, lockfiles):
     _multitool_hub(name = name, lockfiles = lockfiles)
 
 def multitool(name, lockfile):
-    "(non-bzlmod) Create a multitool hub and register its toolchains."
-    hub(name, [lockfile])
+    """(non-bzlmod) Create a multitool hub and register its toolchains.
+
+    Args:
+        name: resulting "hub" repo name to load tools from
+        lockfile: a label or list of labels for lockfiles, see /lockfile.schema.json
+    """
+    if type(lockfile) == type("string"):
+        hub(name, [lockfile])
+    elif type(lockfile) == type([]):
+        hub(name, lockfile)
+    else:
+        fail("lockfile must be a string or list of strings")
     native.register_toolchains("@{name}//toolchains:all".format(name = name))
