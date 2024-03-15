@@ -243,7 +243,7 @@ def multitool(name, lockfile = None, lockfiles = None):
     if lockfile and lockfiles:
         fail("Only one of lockfile and lockfiles may be set")
     if not lockfile and not lockfiles:
-        fail("At least one of lockfile and lockfiles must be set)
+        fail("Exactly one of lockfile and lockfiles must be set")
     if lockfile:
         hub(name, [lockfile])
     else
