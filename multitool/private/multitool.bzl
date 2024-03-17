@@ -232,7 +232,20 @@ def hub(name, lockfiles):
         )
     _multitool_hub(name = name, lockfiles = lockfiles)
 
-def multitool(name, lockfile):
-    "(non-bzlmod) Create a multitool hub and register its toolchains."
-    hub(name, [lockfile])
+def multitool(name, lockfile = None, lockfiles = None):
+    """(non-bzlmod) Create a multitool hub and register its toolchains.
+
+    Args:
+        name: resulting "hub" repo name to load tools from
+        lockfile: a label for a lockfile, see /lockfile.schema.json
+        lockfiles: a list of labels of multiple lockfiles
+    """
+    if lockfile and lockfiles:
+        fail("Only one of lockfile and lockfiles may be set")
+    if not lockfile and not lockfiles:
+        fail("Exactly one of lockfile and lockfiles must be set")
+    if lockfile:
+        hub(name, [lockfile])
+    else:
+        hub(name, lockfiles)
     native.register_toolchains("@{name}//toolchains:all".format(name = name))
