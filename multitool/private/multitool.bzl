@@ -246,6 +246,6 @@ def multitool(name, lockfile = None, lockfiles = None):
         fail("Exactly one of lockfile and lockfiles must be set")
     if lockfile:
         hub(name, [lockfile])
-    else
+    else:
         hub(name, lockfiles)
     native.register_toolchains("@{name}//toolchains:all".format(name = name))
