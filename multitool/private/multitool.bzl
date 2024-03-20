@@ -110,6 +110,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = target_executable,
                     executable = True,
+                    **binary.get("extra_download_args", {})
                 )
             elif binary["kind"] == "archive":
                 archive_path = "tools/{tool_name}/{os}_{cpu}_archive".format(
@@ -122,6 +123,7 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path,
+                    **binary.get("extra_download_args", {})
                 )
 
                 # link to the executable
@@ -147,6 +149,7 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path + ".pkg",
+                    **binary.get("extra_download_args", {})
                 )
 
                 rctx.execute([pkgutil_cmd, "--expand-full", archive_path + ".pkg", archive_path])

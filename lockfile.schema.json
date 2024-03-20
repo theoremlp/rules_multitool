@@ -31,6 +31,10 @@
                         },
                         "cpu": {
                             "enum": ["x86_64", "arm64"]
+                        },
+                        "extra_download_args": {
+                            "type": "object",
+                            "description": "additional arguments, such as 'headers' or 'type', passed to Bazel's download function"
                         }
                     },
                     "additionalProperties": false
