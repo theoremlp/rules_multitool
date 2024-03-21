@@ -39,9 +39,8 @@ of the toolchain definitions in the latter repos to make the dependencies run ex
 This implementation depends on rendering a number of templates, which are defined in sibling
 folders and managed by the templates starlark file.
 
-To maintain support both bzlmod and non-bzlmod setups, we provide two entrypoints to the rule:
- - (bzlmod)     hub       : invoked by the hub tag in extension.bzl
- - (non-bzlmod) multitool : invoked in WORKSPACE or related macros, and additionally registers toolchains
+Note that we intend to support both bzlmod and non-bzlmod setups, so `hub` intentionally avoids
+a register_toolchains call.
 """
 
 load("@bazel_features//:features.bzl", "bazel_features")
@@ -243,14 +242,3 @@ def hub(name, lockfiles):
             cpu = env[1],
         )
     _multitool_hub(name = name, lockfiles = lockfiles)
-
-def multitool(name, lockfiles):
-    """
-    (non-bzlmod) Create a multitool hub and register its toolchains.
-
-    Args:
-        name: resulting "hub" repo name to load tools from
-        lockfiles: a list of labels of multiple lockfiles
-    """
-    hub(name, lockfiles)
-    native.register_toolchains("@{name}//toolchains:all".format(name = name))

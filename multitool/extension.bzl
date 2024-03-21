@@ -1,4 +1,4 @@
-"multitool"
+"multitool module extension"
 
 load("//multitool/private:multitool.bzl", _hub = "hub")
 

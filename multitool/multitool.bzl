@@ -1,6 +1,6 @@
-"multitool"
+"multitool workspace macros"
 
-load("//multitool/private:multitool.bzl", _multitool = "multitool")
+load("//multitool/private:multitool.bzl", "hub")
 
 def multitool(name, lockfile = None, lockfiles = None):
     """(non-bzlmod) Create a multitool hub and register its toolchains.
@@ -17,4 +17,5 @@ def multitool(name, lockfile = None, lockfiles = None):
 
     lockfiles = lockfiles if lockfiles else [lockfile]
 
-    _multitool(name, lockfiles)
+    hub(name, lockfiles)
+    native.register_toolchains("@{name}//toolchains:all".format(name = name))
