@@ -10,7 +10,7 @@ def multitool(name, lockfile = None, lockfiles = None):
         lockfile: a label for a lockfile, see /lockfile.schema.json
         lockfiles: a list of labels of multiple lockfiles
 
-    Note: at most one of lockfile or lockfiles may be set.
+    Note: exactly one of lockfile or lockfiles may be set.
     """
     if (not lockfile and not lockfiles) or (lockfile and lockfiles):
         fail("Exactly one of lockfile and lockfiles must be set")
