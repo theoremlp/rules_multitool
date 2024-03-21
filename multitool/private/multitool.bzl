@@ -110,10 +110,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = target_executable,
                     executable = True,
-                    # TODO: rctx.download is complaining no such argument `headers`
-                    #  despite docs saying it's a supported arg.
-                    #  https://bazel.build/rules/lib/builtins/repository_ctx#download
-                    # headers = binary.get("headers", {}),
+                    headers = binary.get("headers", {}),
                 )
             elif binary["kind"] == "archive":
                 archive_path = "tools/{tool_name}/{os}_{cpu}_archive".format(
@@ -127,10 +124,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = archive_path,
                     type = binary.get("type", ""),
-                    # TODO: rctx.download_and_extract is complaining no such argument `headers`
-                    #  despite docs saying it's a supported arg.
-                    #  https://bazel.build/rules/lib/builtins/repository_ctx#download_and_extract
-                    # headers = binary.get("headers", {}),
+                    headers = binary.get("headers", {}),
                 )
 
                 # link to the executable
@@ -156,10 +150,7 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path + ".pkg",
-                    # TODO: rctx.download is complaining no such argument `headers`
-                    #  despite docs saying it's a supported arg.
-                    #  https://bazel.build/rules/lib/builtins/repository_ctx#download
-                    # headers = binary.get("headers", {}),
+                    headers = binary.get("headers", {}),
                 )
 
                 rctx.execute([pkgutil_cmd, "--expand-full", archive_path + ".pkg", archive_path])
