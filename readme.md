@@ -54,3 +54,5 @@ use_repo(multitool, "multitool")
 ```
 
 Tools may then be accessed using `@multitool//tools/tool-name`.
+
+Instructions for using with WORKSPACE may be found in release notes.
