@@ -4,7 +4,7 @@ An ergonomic approach to defining a single tool target that resolves to a matchi
 
 ## Usage
 
-For a quickstart, see the [bzlmod example](examples/module/).
+For a quickstart, see the [module example](examples/module/) or [workspace example](examples/workspace/).
 
 Define a [lockfile](lockfile.schema.json) that references the tools to load:
 
