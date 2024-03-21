@@ -6,7 +6,7 @@ An ergonomic approach to defining a single tool target that resolves to a matchi
 
 For a quickstart, see the [bzlmod example](examples/module/).
 
-Define a lockfile that references the tools to load:
+Define a [lockfile](lockfile.schema.json) that references the tools to load:
 
 ```json
 {
