@@ -16,7 +16,7 @@ jobs:
         [
           ".",
           "examples/module",
-          "examples/target-determinator"
+          "examples/workspace"
         ]
       # we only support Bazel 7, and only with bzlmod enabled
       exclude: |
@@ -31,5 +31,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - working-directory: examples/target-determinator
+      - working-directory: examples/workspace
         run: ./minimal_download_test.sh

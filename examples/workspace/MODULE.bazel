@@ -1,7 +1,7 @@
 "multitool example using target-determinator"
 
 module(
-    name = "multitool_examples__target_determinator",
+    name = "multitool_examples__workspace",
     version = "0.0.0",
     compatibility_level = 1,
 )
