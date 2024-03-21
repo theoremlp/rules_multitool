@@ -44,6 +44,7 @@ To maintain support both bzlmod and non-bzlmod setups, we provide two entrypoint
  - (non-bzlmod) multitool : invoked in WORKSPACE or related macros, and additionally registers toolchains
 """
 
+load("@bazel_features//:features.bzl", "bazel_features")
 load(":templates.bzl", "templates")
 
 _SUPPORTED_ENVS = [
@@ -90,6 +91,13 @@ def _load_tools(rctx):
 
     return tools
 
+def _feature_sensitive_args(binary):
+    args = {}
+    if bazel_features.external_deps.download_has_headers_param:
+        args["headers"] = binary.get("headers", {})
+
+    return args
+
 def _env_specific_tools_impl(rctx):
     tools = _load_tools(rctx)
 
@@ -110,7 +118,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = target_executable,
                     executable = True,
-                    headers = binary.get("headers", {}),
+                    **_feature_sensitive_args(binary)
                 )
             elif binary["kind"] == "archive":
                 archive_path = "tools/{tool_name}/{os}_{cpu}_archive".format(
@@ -124,7 +132,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = archive_path,
                     type = binary.get("type", ""),
-                    headers = binary.get("headers", {}),
+                    **_feature_sensitive_args(binary)
                 )
 
                 # link to the executable
@@ -150,7 +158,7 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path + ".pkg",
-                    headers = binary.get("headers", {}),
+                    **_feature_sensitive_args(binary)
                 )
 
                 rctx.execute([pkgutil_cmd, "--expand-full", archive_path + ".pkg", archive_path])

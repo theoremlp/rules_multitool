@@ -19,6 +19,7 @@
         "cpu": { "$ref": "#/definitions/supported_cpu" },
         "headers": {
           "type": "object",
+          "docs": "headers to pass to the downloader (supported on Bazel >= 7.1.0)",
           "additionalProperties": {
             "type": "string"
           }
@@ -40,6 +41,7 @@
         "cpu": { "$ref": "#/definitions/supported_cpu" },
         "headers": {
           "type": "object",
+          "docs": "headers to pass to the downloader (supported on Bazel >= 7.1.0)",
           "additionalProperties": {
             "type": "string"
           }
@@ -80,6 +82,7 @@
         "cpu": { "$ref": "#/definitions/supported_cpu" },
         "headers": {
           "type": "object",
+          "docs": "headers to pass to the downloader (supported on Bazel >= 7.1.0)",
           "additionalProperties": {
             "type": "string"
           }
