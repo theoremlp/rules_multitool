@@ -39,11 +39,11 @@ of the toolchain definitions in the latter repos to make the dependencies run ex
 This implementation depends on rendering a number of templates, which are defined in sibling
 folders and managed by the templates starlark file.
 
-To maintain support both bzlmod and non-bzlmod setups, we provide two entrypoints to the rule:
- - (bzlmod)     hub       : invoked by the hub tag in extension.bzl
- - (non-bzlmod) multitool : invoked in WORKSPACE or related macros, and additionally registers toolchains
+Note that we intend to support both bzlmod and non-bzlmod setups, so `hub` intentionally avoids
+a register_toolchains call.
 """
 
+load("@bazel_features//:features.bzl", "bazel_features")
 load(":templates.bzl", "templates")
 
 _SUPPORTED_ENVS = [
@@ -90,6 +90,13 @@ def _load_tools(rctx):
 
     return tools
 
+def _feature_sensitive_args(binary):
+    args = {}
+    if bazel_features.external_deps.download_has_headers_param:
+        args["headers"] = binary.get("headers", {})
+
+    return args
+
 def _env_specific_tools_impl(rctx):
     tools = _load_tools(rctx)
 
@@ -110,6 +117,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = target_executable,
                     executable = True,
+                    **_feature_sensitive_args(binary)
                 )
             elif binary["kind"] == "archive":
                 archive_path = "tools/{tool_name}/{os}_{cpu}_archive".format(
@@ -122,6 +130,8 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path,
+                    type = binary.get("type", ""),
+                    **_feature_sensitive_args(binary)
                 )
 
                 # link to the executable
@@ -147,6 +157,7 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path + ".pkg",
+                    **_feature_sensitive_args(binary)
                 )
 
                 rctx.execute([pkgutil_cmd, "--expand-full", archive_path + ".pkg", archive_path])
@@ -231,21 +242,3 @@ def hub(name, lockfiles):
             cpu = env[1],
         )
     _multitool_hub(name = name, lockfiles = lockfiles)
-
-def multitool(name, lockfile = None, lockfiles = None):
-    """(non-bzlmod) Create a multitool hub and register its toolchains.
-
-    Args:
-        name: resulting "hub" repo name to load tools from
-        lockfile: a label for a lockfile, see /lockfile.schema.json
-        lockfiles: a list of labels of multiple lockfiles
-    """
-    if lockfile and lockfiles:
-        fail("Only one of lockfile and lockfiles may be set")
-    if not lockfile and not lockfiles:
-        fail("Exactly one of lockfile and lockfiles must be set")
-    if lockfile:
-        hub(name, [lockfile])
-    else:
-        hub(name, lockfiles)
-    native.register_toolchains("@{name}//toolchains:all".format(name = name))

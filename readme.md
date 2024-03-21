@@ -4,9 +4,9 @@ An ergonomic approach to defining a single tool target that resolves to a matchi
 
 ## Usage
 
-For a quickstart, see the [bzlmod example](examples/module/).
+For a quickstart, see the [module example](examples/module/) or [workspace example](examples/workspace/).
 
-Define a lockfile that references the tools to load:
+Define a [lockfile](lockfile.schema.json) that references the tools to load:
 
 ```json
 {
@@ -43,7 +43,9 @@ The lockfile supports the following binary kinds:
 
 Save your lockfile and ensure the file is exported using `export_files` so that it's available to Bazel.
 
-Once your lockfile is defined, load the ruleset in your **MODULE.bazel** and create a hub that refers to your lockfile:
+### Bazel Module Usage
+
+Once your lockfile is defined, load the ruleset in your MODULE.bazel and create a hub that refers to your lockfile:
 
 ```python
 bazel_dep(name = "rules_multitool", version = "0.0.0")
@@ -54,3 +56,7 @@ use_repo(multitool, "multitool")
 ```
 
 Tools may then be accessed using `@multitool//tools/tool-name`.
+
+### Workspace Usage
+
+Instructions for using with WORKSPACE may be found in [release notes](https://github.com/theoremlp/rules_multitool/releases).
