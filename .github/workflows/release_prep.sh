@@ -49,7 +49,7 @@ http_archive(
     name = "rules_multitool",
     sha256 = "${SHA}",
     strip_prefix = "rules_multitool-${TAG:1}",
-    url = "https://github.com/bazel-contrib/bazel_features/releases/download/v${TAG:1}/bazel_features-${TAG:1}.tar.gz",
+    url = "https://github.com/theoremlp/rules_multitool/releases/download/v${TAG:1}/rules_multitool-${TAG:1}.tar.gz",
 )
 
 load("@bazel_features//:deps.bzl", "bazel_features_deps")
