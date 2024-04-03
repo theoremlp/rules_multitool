@@ -84,4 +84,6 @@ bazel build "$target" && exec $(bazel 2>/dev/null cquery --output=files "$target
 Now just create symlinks such as `tools/mytool -> ./_multitool_run_under_cwd.sh`.
 This will build `@multitool//tools/mytool` and then execute the resulting binary in the current working directory.
 
+Developers can now just naively run `./tools/mytool --arg my/file` and don't need to worry about where the tool comes from.
+
 [discards the analysis cache]: https://github.com/bazelbuild/bazel/issues/10782
