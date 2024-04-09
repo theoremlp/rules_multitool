@@ -78,7 +78,7 @@ Instead, the authors recommend the following technique. Create a script like `to
 #!/bin/bash
 # Workaround https://github.com/bazelbuild/bazel/issues/3325
 target="@multitool//tools/$(basename "$0")"
-bazel build "$target" && exec $(bazel 2>/dev/null cquery --output=files "$target") "$@"
+bazel build "$target" && exec "$(bazel info execution_root)/$(bazel 2>/dev/null cquery --output=files "$target")" "$@"
 ```
 
 Now just create symlinks such as `tools/mytool -> ./_multitool_run_under_cwd.sh`.
