@@ -61,29 +61,19 @@ Tools may then be accessed using `@multitool//tools/tool-name`.
 
 Instructions for using with WORKSPACE may be found in [release notes](https://github.com/theoremlp/rules_multitool/releases).
 
-### Creating convenience scripts
+### Running tools in the current working directory
 
-When users need to execute tools directly, Bazel does not provide very good support for this,
-because it sets the working directory to the root of the runfiles tree, which breaks the ability of the tool to resolve configuration files and other relative paths.
+When running `@multitool//tools/tool-name`, Bazel will execute the tool at the root of the runfiles tree due to https://github.com/bazelbuild/bazel/issues/3325.
 
-The typical workarounds are all bad:
+To run a tool in the current working directory, use the convenience target `@multitool//tools/tool-name:tool-name.cwd`.
 
-1. Change all paths the tool interacts with to be absolute, so that the working directory is inconsequential.
-2. Wrap the tool in a trivial `sh_binary` that can read `$BUILD_WORKING_DIRECTORY`.
-3. Use `--run_under="cd $PWD &&` however this [discards the analysis cache] slowing down this and the subsequent build.
+A common pattern we recommend to further simplify invoking tools for repository users it to:
 
-Instead, the authors recommend the following technique. Create a script like `tools/_multitool_run_under_cwd.sh` containing the following shell code:
-
-```sh
-#!/bin/bash
-# Workaround https://github.com/bazelbuild/bazel/issues/3325
-target="@multitool//tools/$(basename "$0")"
-bazel build "$target" && exec $(bazel 2>/dev/null cquery --output=files "$target") "$@"
-```
-
-Now just create symlinks such as `tools/mytool -> ./_multitool_run_under_cwd.sh`.
-This will build `@multitool//tools/mytool` and then execute the resulting binary in the current working directory.
-
-Developers can now just naively run `./tools/mytool --arg my/file` and don't need to worry about where the tool comes from.
-
-[discards the analysis cache]: https://github.com/bazelbuild/bazel/issues/10782
+1.  Create a `tools/` directory
+1.  Create an executable shell script `tools/_run_multitool.sh` with the following code:
+    ```sh
+    #!/usr/bin/env bash
+    tool="$( basename $0 )"
+    bazel run "@multitool//tools/${tool}:${tool}.cwd" -- "$@"
+    ```
+1.  Create symlinks of `tools/tool-name` to `tools/_run_multitool.sh`
