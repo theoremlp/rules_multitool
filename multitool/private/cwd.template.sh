@@ -3,6 +3,4 @@
 tool="{{tool}}"
 execdir="$PWD"
 
-pushd "$BUILD_WORKING_DIRECTORY" > /dev/null
-"$execdir/$tool" "$@"
-popd > /dev/null
+cd "$BUILD_WORKING_DIRECTORY" && exec "$execdir/$tool" "$@"
