@@ -10,3 +10,12 @@ sh_test(
     ],
     data = ["@multitool//tools/target-determinator"],
 )
+
+sh_test(
+    name = "integration_test_cwd",
+    srcs = ["integration_test.sh"],
+    args = [
+        "$(location @multitool//tools/target-determinator:target-determinator.cwd)",
+    ],
+    data = ["@multitool//tools/target-determinator:target-determinator.cwd"],
+)
