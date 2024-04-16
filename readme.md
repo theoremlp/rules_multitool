@@ -41,8 +41,6 @@ The lockfile supports the following binary kinds:
   - `file`: executable file within the archive
   - `sha256`: the sha256 of the downloaded pkg archive
 
-Save your lockfile and ensure the file is exported using `export_files` so that it's available to Bazel.
-
 ### Bazel Module Usage
 
 Once your lockfile is defined, load the ruleset in your MODULE.bazel and create a hub that refers to your lockfile:
