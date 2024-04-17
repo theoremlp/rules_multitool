@@ -74,3 +74,9 @@ A common pattern we recommend to further simplify invoking tools for repository 
     bazel run "@multitool//tools/$( basename $0 ):cwd" -- "$@"
     ```
 1.  Create symlinks of `tools/tool-name` to `tools/_run_multitool.sh`
+
+### Keeping Tools Up-to-Date
+
+We provide a companion CLI [multitool](https://github.com/theoremlp/multitool) to help manage multitool lockfiles. The CLI supports basic updating of artifacts that come from GitHub releases, and may be extended in the future to support other common release channels.
+
+See [our docs](docs/automation.md) on configuring a GitHub Action to check for updates and open PRs periodically.
