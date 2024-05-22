@@ -6,7 +6,7 @@ module(
     compatibility_level = 1,
 )
 
-bazel_dep(name = "platforms", version = "0.0.8")
+bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "rules_multitool", version = "0.0.0")
 local_path_override(
     module_name = "rules_multitool",
