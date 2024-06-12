@@ -96,10 +96,7 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
       - name: Download and Extract Latest Multitool
-        run: |
-          latest="$(curl https://api.github.com/repos/theoremlp/multitool/releases/latest | jq -r '.assets[].browser_download_url | select(. | test("linux-gnu.tar.xz$"))')"
-          wget -O multitool.tar.xz "$latest"
-          tar --strip-components=1 -xf multitool.tar.xz
+        run: wget -O- https://github.com/theoremlp/multitool/releases/latest/download/multitool-x86_64-unknown-linux-gnu.tar.xz | tar --strip-components=1 -xJf -
 
       - name: Find Updates and Render Lockfile
         run: ./multitool --lockfile "$LOCKFILE" update
