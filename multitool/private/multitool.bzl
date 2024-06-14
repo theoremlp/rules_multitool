@@ -65,7 +65,11 @@ def _load_tools(rctx):
         #  fix toolchains to also declare their versions and enable consumers
         #  to use constraints to pick the right one.
         #  (this is also a very naive merge at the tool level)
-        tools = tools | json.decode(rctx.read(lockfile))
+
+        # Read and merge dictionaries with RHS keys taking precedence.
+        # Using `tools | rhs_dict` would prefer LHS keys over RHS keys.
+        lock_dict = json.decode(rctx.read(lockfile))
+        tools.update(lock_dict)
 
     # a special key says this JSON document conforms to a schema
     tools.pop("$schema", None)
