@@ -10,7 +10,7 @@ hub = tag_class(
 
 def _extension(module_ctx):
     lockfiles = []
-    for mod in module_ctx.modules:
+    for mod in reversed(module_ctx.modules):
         for h in mod.tags.hub:
             lockfiles.append(h.lockfile)
 
