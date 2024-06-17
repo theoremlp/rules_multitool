@@ -6,6 +6,7 @@ def _toolchain_info_impl(ctx):
             executable = ctx.file.executable,
             cpu = ctx.attr.cpu,
             os = ctx.attr.os,
+            ext = ctx.attr.ext,
         ),
     ]
 
@@ -13,17 +14,25 @@ toolchain_info = rule(
     attrs = dict(
         executable = attr.label(allow_single_file = True),
         cpu = attr.string(mandatory = True, values = ["arm64", "x86_64"]),
-        os = attr.string(mandatory = True, values = ["linux", "macos"]),
+        os = attr.string(mandatory = True, values = ["linux", "macos", "windows"]),
+        ext = attr.string(mandatory = True, values = ["", ".exe"]),
     ),
     implementation = _toolchain_info_impl,
 )
 
+def _extension(os):
+    if os == "windows":
+        return ".exe"
+    return ""
+
 def declare_toolchain(name, os, cpu, toolchain_type):
+    ext = _extension(os)
     toolchain_info(
         name = "{name}_{os}_{cpu}_toolchain_info".format(name=name, os=os, cpu=cpu),
-        executable = "@@{hub_name}.{os}_{cpu}//tools/{name}:{os}_{cpu}_executable".format(name=name, os=os, cpu=cpu),
+        executable = "@@{hub_name}.{os}_{cpu}//tools/{name}:{os}_{cpu}_executable{ext}".format(name=name, os=os, cpu=cpu, ext=ext),
         os = os,
         cpu = cpu,
+        ext = ext,
     )
 
     native.toolchain(

@@ -4,7 +4,7 @@
   "type": "object",
   "definitions": {
     "supported_os": {
-      "enum": ["macos", "linux"]
+      "enum": ["macos", "linux", "windows"]
     },
     "supported_cpu": {
       "enum": ["x86_64", "arm64"]

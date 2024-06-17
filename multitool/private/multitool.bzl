@@ -51,6 +51,7 @@ _SUPPORTED_ENVS = [
     ("linux", "x86_64"),
     ("macos", "arm64"),
     ("macos", "x86_64"),
+    ("windows", "x86_64"),
 ]
 
 def _check(condition, message):
@@ -74,7 +75,7 @@ def _load_tools(rctx):
     for tool_name, tool in tools.items():
         for binary in tool["binaries"]:
             _check(
-                binary["os"] in ["linux", "macos"],
+                binary["os"] in ["linux", "macos", "windows"],
                 "{tool_name}: Unknown os '{os}'".format(
                     tool_name = tool_name,
                     os = binary["os"],
@@ -97,6 +98,11 @@ def _feature_sensitive_args(binary):
 
     return args
 
+def _extension(os):
+    if os == "windows":
+        return ".exe"
+    return ""
+
 def _env_specific_tools_impl(rctx):
     tools = _load_tools(rctx)
 
@@ -105,13 +111,15 @@ def _env_specific_tools_impl(rctx):
             if binary["os"] != rctx.attr.os or binary["cpu"] != rctx.attr.cpu:
                 continue
 
-            target_executable = "tools/{tool_name}/{os}_{cpu}_executable".format(
+            target_executable = "tools/{tool_name}/{os}_{cpu}_executable{ext}".format(
                 tool_name = tool_name,
                 cpu = binary["cpu"],
                 os = binary["os"],
+                ext = _extension(binary["os"])
             )
 
             if binary["kind"] == "file":
+                print("downloading url: "+str(binary["url"])+" to: "+str(target_executable))
                 rctx.download(
                     url = binary["url"],
                     sha256 = binary["sha256"],
@@ -126,6 +134,7 @@ def _env_specific_tools_impl(rctx):
                     os = binary["os"],
                 )
 
+                print("downloading url: "+str(binary["url"])+" to: "+str(archive_path))
                 rctx.download_and_extract(
                     url = binary["url"],
                     sha256 = binary["sha256"],
@@ -135,6 +144,7 @@ def _env_specific_tools_impl(rctx):
                 )
 
                 # link to the executable
+                print("symlink: "+"{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"])+", "+target_executable)
                 rctx.symlink(
                     "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"]),
                     target_executable,

@@ -25,7 +25,7 @@ jobs:
           {"bazelversion": "5.4.0"},
           {"bazelversion": "6.4.0"},
         ]
-      # this ruleset only supports linux and macos
+      # our CI only supports linux and macos
       exclude_windows: true
   integration-tests:
     runs-on: ubuntu-latest
