@@ -2,7 +2,4 @@
 
 set -eu
 
-# todo: temporary; remove
-pwd
-
 $1 -version
