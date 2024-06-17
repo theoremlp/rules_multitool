@@ -143,6 +143,7 @@ def _env_specific_tools_impl(rctx):
                 )
 
                 # link to the executable
+                print("rctx.symlink("+"{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"])+", "+target_executable+")")
                 rctx.symlink(
                     "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"]),
                     target_executable,
@@ -171,6 +172,7 @@ def _env_specific_tools_impl(rctx):
                 rctx.execute([pkgutil_cmd, "--expand-full", archive_path + ".pkg", archive_path])
 
                 # link to the executable
+                print("rctx.symlink("+"{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"])+", "+target_executable+")")
                 rctx.symlink(
                     "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"]),
                     target_executable,
