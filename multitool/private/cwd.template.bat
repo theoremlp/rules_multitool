@@ -1,2 +1,3 @@
-set tool=%cd%\{{tool}}
-cd %BUILD_WORKING_DIRECTORY% && %tool% %*
+@set tool=%cd%\{{tool}}
+@cd %BUILD_WORKING_DIRECTORY%
+@%tool% %*
