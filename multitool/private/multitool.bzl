@@ -60,6 +60,15 @@ def _check(condition, message):
     if not condition:
         fail(message)
 
+def _check_version(os):
+    # skip version check on windows if we don't have a release version. We can't tell from a hash what features we have.
+    if os == "windows" and native.bazel_version:
+        version = native.bazel_version.split(".")
+        if int(version[0]) > 7 or (int(version[0]) == 7 and int(version[1]) >= 1):
+            pass
+        else:
+            fail("rules_multitool: windows artifacts require bazel 7.1+; current bazel is "+native.bazel_version)
+
 def _load_tools(rctx):
     tools = {}
     for lockfile in rctx.attr.lockfiles:
@@ -89,6 +98,7 @@ def _load_tools(rctx):
                     cpu = binary["cpu"],
                 ),
             )
+            _check_version(binary["os"])
 
     return tools
 
@@ -143,7 +153,6 @@ def _env_specific_tools_impl(rctx):
                 )
 
                 # link to the executable
-                print("rctx.symlink("+"{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"])+", "+target_executable+")")
                 rctx.symlink(
                     "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"]),
                     target_executable,
@@ -172,7 +181,6 @@ def _env_specific_tools_impl(rctx):
                 rctx.execute([pkgutil_cmd, "--expand-full", archive_path + ".pkg", archive_path])
 
                 # link to the executable
-                print("rctx.symlink("+"{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"])+", "+target_executable+")")
                 rctx.symlink(
                     "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"]),
                     target_executable,
