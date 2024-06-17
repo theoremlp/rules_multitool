@@ -51,6 +51,7 @@ _SUPPORTED_ENVS = [
     ("linux", "x86_64"),
     ("macos", "arm64"),
     ("macos", "x86_64"),
+    ("windows", "arm64"),
     ("windows", "x86_64"),
 ]
 
