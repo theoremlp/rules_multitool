@@ -52,10 +52,18 @@
         },
         {
             "kind": "archive",
-            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_windows_amd64.zip",
-            "sha256": "unknown",
-            "file": "gh_2.44.1_windows_amd64/bin",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_linux_amd64.tar.gz",
+            "sha256": "f11eefb646768e3f53e2185f6d3b01b4cb02112c2c60e65a4b5875150287ff97",
+            "file": "gh_2.44.1_linux_amd64/bin",            
             "os": "linux",
+            "cpu": "x86_64"
+        },
+        {
+            "kind": "archive",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_windows_amd64.zip",
+            "sha256": "f11eefb646768e3f53e2185f6d3b01b4cb02112c2c60e65a4b5875150287ff97",
+            "file": "gh_2.44.1_windows_amd64/bin",
+            "os": "windows",
             "cpu": "x86_64"
         }
     ]
