@@ -7,6 +7,7 @@ _TOOLCHAIN_TYPE = "//tools/{name}:toolchain_type"
 def _tool_impl(ctx):
     toolchain = ctx.toolchains[_TOOLCHAIN_TYPE]
     output = ctx.actions.declare_file(ctx.label.name+toolchain.ext)
+    # todo: temporary; remove
     print("symlink: "+output.path+", "+str(toolchain.executable.path))
     ctx.actions.symlink(output = output, target_file = toolchain.executable)
     return [DefaultInfo(executable = output)]

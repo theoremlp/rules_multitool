@@ -119,6 +119,7 @@ def _env_specific_tools_impl(rctx):
             )
 
             if binary["kind"] == "file":
+                # todo: temporary; remove
                 print("downloading url: "+str(binary["url"])+" to: "+str(target_executable))
                 rctx.download(
                     url = binary["url"],
@@ -134,6 +135,7 @@ def _env_specific_tools_impl(rctx):
                     os = binary["os"],
                 )
 
+                # todo: temporary; remove
                 print("downloading url: "+str(binary["url"])+" to: "+str(archive_path))
                 rctx.download_and_extract(
                     url = binary["url"],
@@ -144,6 +146,7 @@ def _env_specific_tools_impl(rctx):
                 )
 
                 # link to the executable
+                # todo: temporary; remove
                 print("symlink: "+"{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"])+", "+target_executable)
                 rctx.symlink(
                     "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"]),
