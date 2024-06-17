@@ -67,7 +67,7 @@ def _check_version(os):
         if int(version[0]) > 7 or (int(version[0]) == 7 and int(version[1]) >= 1):
             pass
         else:
-            fail("rules_multitool: windows artifacts require bazel 7.1+; current bazel is "+native.bazel_version)
+            fail("rules_multitool: windows artifacts require bazel 7.1+; current bazel is " + native.bazel_version)
 
 def _load_tools(rctx):
     tools = {}
@@ -126,7 +126,7 @@ def _env_specific_tools_impl(rctx):
                 tool_name = tool_name,
                 cpu = binary["cpu"],
                 os = binary["os"],
-                ext = _extension(binary["os"])
+                ext = _extension(binary["os"]),
             )
 
             if binary["kind"] == "file":
