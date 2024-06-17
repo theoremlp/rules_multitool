@@ -1,3 +1,12 @@
 common --enable_bzlmod
 
 common --lockfile_mode=off
+
+# best practice to disable
+common --nolegacy_external_runfiles
+
+# off by default on windows, required for this module
+startup --windows_enable_symlinks
+
+# off by default on windows, required for this module
+common --enable_runfiles

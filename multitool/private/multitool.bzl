@@ -51,12 +51,23 @@ _SUPPORTED_ENVS = [
     ("linux", "x86_64"),
     ("macos", "arm64"),
     ("macos", "x86_64"),
+    ("windows", "arm64"),
+    ("windows", "x86_64"),
 ]
 
 def _check(condition, message):
     "fails iff condition is False and emits message"
     if not condition:
         fail(message)
+
+def _check_version(os):
+    # skip version check on windows if we don't have a release version. We can't tell from a hash what features we have.
+    if os == "windows" and native.bazel_version:
+        version = native.bazel_version.split(".")
+        if int(version[0]) > 7 or (int(version[0]) == 7 and int(version[1]) >= 1):
+            pass
+        else:
+            fail("rules_multitool: windows artifacts require bazel 7.1+; current bazel is " + native.bazel_version)
 
 def _load_tools(rctx):
     tools = {}
@@ -74,7 +85,7 @@ def _load_tools(rctx):
     for tool_name, tool in tools.items():
         for binary in tool["binaries"]:
             _check(
-                binary["os"] in ["linux", "macos"],
+                binary["os"] in ["linux", "macos", "windows"],
                 "{tool_name}: Unknown os '{os}'".format(
                     tool_name = tool_name,
                     os = binary["os"],
@@ -87,6 +98,7 @@ def _load_tools(rctx):
                     cpu = binary["cpu"],
                 ),
             )
+            _check_version(binary["os"])
 
     return tools
 
@@ -97,6 +109,11 @@ def _feature_sensitive_args(binary):
 
     return args
 
+def _extension(os):
+    if os == "windows":
+        return ".exe"
+    return ""
+
 def _env_specific_tools_impl(rctx):
     tools = _load_tools(rctx)
 
@@ -105,10 +122,11 @@ def _env_specific_tools_impl(rctx):
             if binary["os"] != rctx.attr.os or binary["cpu"] != rctx.attr.cpu:
                 continue
 
-            target_executable = "tools/{tool_name}/{os}_{cpu}_executable".format(
+            target_executable = "tools/{tool_name}/{os}_{cpu}_executable{ext}".format(
                 tool_name = tool_name,
                 cpu = binary["cpu"],
                 os = binary["os"],
+                ext = _extension(binary["os"]),
             )
 
             if binary["kind"] == "file":
