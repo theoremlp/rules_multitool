@@ -62,7 +62,7 @@
             "kind": "archive",
             "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_windows_amd64.zip",
             "sha256": "5a19a334d5032cfcb01e71e418c5e355104f7afd9129daf8939b729ffa46aa08",
-            "file": "gh_2.44.1_windows_amd64/bin/gh.exe",
+            "file": "bin/gh.exe",
             "os": "windows",
             "cpu": "x86_64"
         }
