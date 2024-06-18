@@ -122,11 +122,14 @@ def _env_specific_tools_impl(rctx):
             if binary["os"] != rctx.attr.os or binary["cpu"] != rctx.attr.cpu:
                 continue
 
-            target_executable = "tools/{tool_name}/{os}_{cpu}_executable{ext}".format(
-                tool_name = tool_name,
+            target_filename = "{os}_{cpu}_executable{ext}".format(
                 cpu = binary["cpu"],
                 os = binary["os"],
                 ext = _extension(binary["os"]),
+            )
+            target_executable = "tools/{tool_name}/{filename}".format(
+                tool_name = tool_name,
+                filename = target_filename,
             )
 
             if binary["kind"] == "file":
@@ -153,10 +156,16 @@ def _env_specific_tools_impl(rctx):
                 )
 
                 # link to the executable
-                rctx.symlink(
-                    "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"]),
-                    target_executable,
-                )
+                archive_file = "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"])
+                if not rctx.path(archive_file).exists:
+                    fail("{tool_name} ({os}, {cpu}): Cannot find {file} in archive from {url}".format(
+                        tool_name = tool_name,
+                        os = binary["os"],
+                        cpu = binary["cpu"],
+                        file = archive_file,
+                        url = binary["url"],
+                    ))
+                rctx.symlink(archive_file, target_executable)
             elif binary["kind"] == "pkg":
                 # Check if pkgutil is on the path, and if not fail silently.
                 # repository rules execute irrespective of platform/OS, so this
@@ -181,14 +190,20 @@ def _env_specific_tools_impl(rctx):
                 rctx.execute([pkgutil_cmd, "--expand-full", archive_path + ".pkg", archive_path])
 
                 # link to the executable
-                rctx.symlink(
-                    "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"]),
-                    target_executable,
-                )
+                archive_file = "{archive_path}/{file}".format(archive_path = archive_path, file = binary["file"])
+                if not rctx.path(archive_file).exists:
+                    fail("{tool_name} ({os}, {cpu}): Cannot find {file} in archive from {url}".format(
+                        tool_name = tool_name,
+                        os = binary["os"],
+                        cpu = binary["cpu"],
+                        file = archive_file,
+                        url = binary["url"],
+                    ))
+                rctx.symlink(archive_file, target_executable)
             else:
                 fail("Unknown 'kind' {kind}".format(kind = binary["kind"]))
 
-            templates.env_tool(rctx, tool_name, "BUILD.bazel")
+            templates.env_tool(rctx, tool_name, "BUILD.bazel", {"{target_filename}": target_filename})
 
     templates.env(rctx, "tools/BUILD.bazel")
     templates.env(rctx, "BUILD.bazel")
