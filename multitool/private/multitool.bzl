@@ -99,7 +99,7 @@ def _load_tools(rctx):
                     cpu = binary["cpu"],
                 ),
             )
-            _check_version(rctx.os, binary["os"])
+            _check_version(rctx.os.name, binary["os"])
 
     return tools
 
