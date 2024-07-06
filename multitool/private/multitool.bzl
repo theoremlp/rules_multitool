@@ -60,14 +60,15 @@ def _check(condition, message):
     if not condition:
         fail(message)
 
-def _check_version(os):
+def _check_version(os, binary_os):
+    # require bazel 7.1 on windows. Only do this check for windows artifacts to avoid regressing anyone
     # skip version check on windows if we don't have a release version. We can't tell from a hash what features we have.
-    if os == "windows" and native.bazel_version:
+    if os == "windows" and binary_os == "windows" and native.bazel_version:
         version = native.bazel_version.split(".")
         if int(version[0]) > 7 or (int(version[0]) == 7 and int(version[1]) >= 1):
             pass
         else:
-            fail("rules_multitool: windows artifacts require bazel 7.1+; current bazel is " + native.bazel_version)
+            fail("rules_multitool: windows platform requires bazel 7.1+ to read artifacts; current bazel is " + native.bazel_version)
 
 def _load_tools(rctx):
     tools = {}
@@ -98,7 +99,7 @@ def _load_tools(rctx):
                     cpu = binary["cpu"],
                 ),
             )
-            _check_version(binary["os"])
+            _check_version(rctx.os.name, binary["os"])
 
     return tools
 
