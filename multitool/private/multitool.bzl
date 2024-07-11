@@ -44,6 +44,7 @@ a register_toolchains call.
 """
 
 load("@bazel_features//:features.bzl", "bazel_features")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "read_netrc", "read_user_netrc", "use_netrc")
 load(":templates.bzl", "templates")
 
 _SUPPORTED_ENVS = [
@@ -69,6 +70,14 @@ def _check_version(os, binary_os):
             pass
         else:
             fail("rules_multitool: windows platform requires bazel 7.1+ to read artifacts; current bazel is " + native.bazel_version)
+
+def _get_auth(ctx, urls):
+    "Returns an auth dict for the provided list or URLs."
+    if "NETRC" in ctx.os.environ:
+        netrc = read_netrc(ctx, ctx.os.environ["NETRC"])
+    else:
+        netrc = read_user_netrc(ctx)
+    return use_netrc(netrc, urls, ctx.attr.auth_patterns)
 
 def _load_tools(rctx):
     tools = {}
@@ -139,6 +148,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = target_executable,
                     executable = True,
+                    auth = _get_auth(ctx, [binary["url"]]),
                     **_feature_sensitive_args(binary)
                 )
             elif binary["kind"] == "archive":
@@ -153,6 +163,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = archive_path,
                     type = binary.get("type", ""),
+                    auth = _get_auth(ctx, [binary["url"]]),
                     **_feature_sensitive_args(binary)
                 )
 
@@ -185,6 +196,7 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path + ".pkg",
+                    auth = _get_auth(ctx, [binary["url"]]),
                     **_feature_sensitive_args(binary)
                 )
 
