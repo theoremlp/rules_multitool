@@ -226,6 +226,7 @@ _env_specific_tools = repository_rule(
         "lockfiles": attr.label_list(mandatory = True, allow_files = True),
         "os": attr.string(),
         "cpu": attr.string(),
+        "auth_patterns": attr.string_dict(),
     },
     implementation = _env_specific_tools_impl,
 )
