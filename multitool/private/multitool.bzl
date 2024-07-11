@@ -71,13 +71,13 @@ def _check_version(os, binary_os):
         else:
             fail("rules_multitool: windows platform requires bazel 7.1+ to read artifacts; current bazel is " + native.bazel_version)
 
-def _get_auth(rctx, urls):
+def _get_auth(rctx, urls, auth_patterns):
     "Returns an auth dict for the provided list or URLs."
     if "NETRC" in rctx.os.environ:
         netrc = read_netrc(rctx, rctx.os.environ["NETRC"])
     else:
         netrc = read_user_netrc(rctx)
-    return use_netrc(netrc, urls, rctx.attr.auth_patterns)
+    return use_netrc(netrc, urls, auth_patterns)
 
 def _load_tools(rctx):
     tools = {}
@@ -148,7 +148,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = target_executable,
                     executable = True,
-                    auth = _get_auth(rctx, [binary["url"]]),
+                    auth = _get_auth(rctx, [binary["url"]], binary["auth_patterns"]),
                     **_feature_sensitive_args(binary)
                 )
             elif binary["kind"] == "archive":
@@ -163,7 +163,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = archive_path,
                     type = binary.get("type", ""),
-                    auth = _get_auth(rctx, [binary["url"]]),
+                    auth = _get_auth(rctx, [binary["url"]], binary["auth_patterns"]),
                     **_feature_sensitive_args(binary)
                 )
 
@@ -196,7 +196,7 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path + ".pkg",
-                    auth = _get_auth(rctx, [binary["url"]]),
+                    auth = _get_auth(rctx, [binary["url"]], binary["auth_patterns"]),
                     **_feature_sensitive_args(binary)
                 )
 
@@ -226,7 +226,6 @@ _env_specific_tools = repository_rule(
         "lockfiles": attr.label_list(mandatory = True, allow_files = True),
         "os": attr.string(),
         "cpu": attr.string(),
-        "auth_patterns": attr.string_dict(),
     },
     implementation = _env_specific_tools_impl,
 )
