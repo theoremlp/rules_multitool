@@ -163,7 +163,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = archive_path,
                     type = binary.get("type", ""),
-                    auth = _get_auth(ctx, [binary["url"]]),
+                    auth = _get_auth(rctx, [binary["url"]]),
                     **_feature_sensitive_args(binary)
                 )
 
