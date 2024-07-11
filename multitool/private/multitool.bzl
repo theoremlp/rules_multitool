@@ -148,7 +148,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = target_executable,
                     executable = True,
-                    auth = _get_auth(rctx, [binary["url"]], binary["auth_patterns"]),
+                    auth = _get_auth(rctx, [binary["url"]], binary.get("auth_patterns", {})),
                     **_feature_sensitive_args(binary)
                 )
             elif binary["kind"] == "archive":
@@ -163,7 +163,7 @@ def _env_specific_tools_impl(rctx):
                     sha256 = binary["sha256"],
                     output = archive_path,
                     type = binary.get("type", ""),
-                    auth = _get_auth(rctx, [binary["url"]], binary["auth_patterns"]),
+                    auth = _get_auth(rctx, [binary["url"]], binary.get("auth_patterns", {})),
                     **_feature_sensitive_args(binary)
                 )
 
@@ -196,7 +196,7 @@ def _env_specific_tools_impl(rctx):
                     url = binary["url"],
                     sha256 = binary["sha256"],
                     output = archive_path + ".pkg",
-                    auth = _get_auth(rctx, [binary["url"]], binary["auth_patterns"]),
+                    auth = _get_auth(rctx, [binary["url"]], binary.get("auth_patterns", {})),
                     **_feature_sensitive_args(binary)
                 )
 
