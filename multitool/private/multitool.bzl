@@ -72,7 +72,7 @@ def _check_version(os, binary_os):
             fail("rules_multitool: windows platform requires bazel 7.1+ to read artifacts; current bazel is " + native.bazel_version)
 
 def _get_auth(rctx, urls, auth_patterns):
-    "Returns an auth dict for the provided list or URLs."
+    "Returns an auth dict for the provided list of URLs."
     if "NETRC" in rctx.os.environ:
         netrc = read_netrc(rctx, rctx.os.environ["NETRC"])
     else:
