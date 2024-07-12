@@ -30,16 +30,23 @@ The lockfile supports the following binary kinds:
 - **file**: the URL refers to a file to download
 
   - `sha256`: the sha256 of the downloaded file
+  - `headers`: (optional) a string dictionary of headers to pass to the downloader
+  - `auth_patterns`: (optional) a string dictionary for use with .netrc files as in https://bazel.build/rules/lib/repo/http#http_file-auth_patterns
 
 - **archive**: the URL referes to an archive to download, specify additional options:
 
   - `file`: executable file within the archive
   - `sha256`: the sha256 of the downloaded archive
+  - `type`: (optional) the kind of archive, as in https://bazel.build/rules/lib/repo/http#http_archive-type
+  - `headers`: (optional) a string dictionary of headers to pass to the downloader
+  - `auth_patterns`: (optional) a string dictionary for use with .netrc files as in https://bazel.build/rules/lib/repo/http#http_archive-auth_patterns
 
 - **pkg**: the URL refers to a MacOS pkg archive to download, specify additional options:
 
   - `file`: executable file within the archive
   - `sha256`: the sha256 of the downloaded pkg archive
+  - `headers`: (optional) a string dictionary of headers to pass to the downloader
+  - `auth_patterns`: (optional) a string dictionary for use with .netrc files as in https://bazel.build/rules/lib/repo/http#http_archive-auth_patterns
 
 ### Bazel Module Usage
 

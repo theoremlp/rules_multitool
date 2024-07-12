@@ -23,6 +23,13 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "auth_patterns": {
+          "type": "object",
+          "docs": "See https://bazel.build/rules/lib/repo/http#http_archive-auth_patterns",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       },
       "required": ["kind", "url", "os", "cpu"]
@@ -64,6 +71,13 @@
             ".ar",
             ".deb"
           ]
+        },
+        "auth_patterns": {
+          "type": "object",
+          "docs": "See https://bazel.build/rules/lib/repo/http#http_archive-auth_patterns",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       },
       "required": ["kind", "url", "os", "cpu", "file"]
@@ -83,6 +97,13 @@
         "headers": {
           "type": "object",
           "docs": "headers to pass to the downloader (supported on Bazel >= 7.1.0)",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "auth_patterns": {
+          "type": "object",
+          "docs": "See https://bazel.build/rules/lib/repo/http#http_archive-auth_patterns",
           "additionalProperties": {
             "type": "string"
           }
