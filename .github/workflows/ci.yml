@@ -8,23 +8,33 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
 jobs:
   test:
-    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v6
-    with:
-      folders: |
-        [
-          ".",
-          "examples/module",
-          "examples/workspace"
-        ]
-      # we only support Bazel 7, and only with bzlmod enabled
-      exclude: |
-        [
-          {"bzlmodEnabled": false},
-          {"bazelversion": "5.4.0"},
-          {"bazelversion": "6.4.0"},
-        ]
+    strategy:
+      matrix:
+        folder: [".", "examples/module", "examples/workspace"]
+        version: ["7.1.0", "8.0.0rc1"]
+        os: ["ubuntu-latest", "windows-latest"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: bazel-contrib/setup-bazel@0.8.0
+        with:
+          repository-cache: true
+          bazelrc: common --announce_rc --color=yes --enable_workspace
+      - name: Configure Bazel version
+        working-directory: ${{ matrix.folder }}
+        run: |
+          echo "${{ matrix.version }}" > .bazelversion
+          bazel version
+      - name: Build
+        working-directory: ${{ matrix.folder }}
+        run: bazel build ...
+      - name: Test
+        working-directory: ${{ matrix.folder }}
+        run: bazel test ...
+
   integration-tests:
     runs-on: ubuntu-latest
     steps:
