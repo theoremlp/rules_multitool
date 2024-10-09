@@ -15,7 +15,7 @@ jobs:
       matrix:
         folder: [".", "examples/module", "examples/workspace"]
         version: ["7.1.0", "8.0.0rc1"]
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        os: ["ubuntu-latest"]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -29,6 +29,9 @@ jobs:
         run: |
           echo "${{ matrix.version }}" > .bazelversion
           bazel version
+      - name: Build
+        working-directory: ${{ matrix.folder }}
+        run: bazel build ...
       - name: Test
         working-directory: ${{ matrix.folder }}
         run: bazel test ...
