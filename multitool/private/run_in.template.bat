@@ -1,3 +1,3 @@
 @set tool=%cd%\{{tool}}
-@cd %BUILD_WORKING_DIRECTORY%
+@cd %{{env_var}}%
 @%tool% %*
