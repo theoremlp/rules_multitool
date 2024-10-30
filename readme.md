@@ -72,6 +72,8 @@ When running `@multitool//tools/tool-name`, Bazel will execute the tool at the r
 
 To run a tool in the current working directory, use the convenience target `@multitool//tools/tool-name:cwd`.
 
+To run a tool in the Bazel module or workspace root, use the convenience target `@multitool/tools/tool-name:workspace_root`.
+
 A common pattern we recommend to further simplify invoking tools for repository users it to:
 
 1.  Create a `tools/` directory

@@ -1,8 +1,8 @@
 load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
 exports_files([
-    "cwd.template.bat",
-    "cwd.template.sh",
+    "run_in.template.bat",
+    "run_in.template.sh",
 ])
 
 bzl_library(
