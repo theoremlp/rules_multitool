@@ -15,4 +15,13 @@ local_path_override(
 
 multitool = use_extension("@rules_multitool//multitool:extension.bzl", "multitool")
 multitool.hub(lockfile = "//:multitool.lock.json")
-use_repo(multitool, "multitool")
+
+# example of an alternate named hub
+multitool.hub(
+    hub_name = "alt",
+    lockfile = "//:multitool.lock.json",
+)
+use_repo(multitool, "alt", "multitool")
+
+# required to use alternate hub's tools
+register_toolchains("@alt//toolchains:all")

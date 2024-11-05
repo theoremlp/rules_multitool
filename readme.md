@@ -62,6 +62,22 @@ use_repo(multitool, "multitool")
 
 Tools may then be accessed using `@multitool//tools/tool-name`.
 
+It's safe to call `multitool.hub(...)` multiple times, with multiple lockfiles. All lockfiles will be combined with a last-write-wins strategy.
+
+Lockfiles defined across modules and applying to the same hub (including implicitly to the default "multitool" hub) will be combined such that the priority follows a breadth-first search originatiung from the root module.
+
+It's possible to define multiple multitool hubs to group related tools together. To define an alternate hub:
+
+```python
+multitool.hub(hub_name = "alt_hub", lockfile = "//:other_tools.lock.json")
+use_repo(multitool, "alt_hub")
+
+# register the tools from this hub
+register_toolchains("@alt_hub//toolchains:all")
+```
+
+These alternate hubs also combine lockfiles according to the hub_name and follow the same merging rules as the default hub.
+
 ### Workspace Usage
 
 Instructions for using with WORKSPACE may be found in [release notes](https://github.com/theoremlp/rules_multitool/releases).
