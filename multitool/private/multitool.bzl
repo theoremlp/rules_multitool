@@ -17,7 +17,7 @@ Multitool takes as input a JSON lockfile and emits the following repos:
      Iff not running in bzlmod, a utility for registering the per-tool repos with Bazel.
 
      The structure of this repo is:
-        tools.bzl         (a file containing one utility method, "load_tools")
+        tools.bzl         (a file containing one utility method, "register_tools")
 
  - [hub]:
      This repository holds toolchain definitions for all tools in the provided
