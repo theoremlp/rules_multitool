@@ -63,7 +63,7 @@ multitool(
     lockfile = "//:multitool.lock.json",
 )
 
-# required since 0.15.0 to enable loading only the tools in use
+# required since 0.15.0 to enable only downloading tools used by this workspace
 load("@multitool.workspace//:tools.bzl", "load_tools")
 
 load_tools()
