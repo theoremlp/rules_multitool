@@ -155,19 +155,6 @@ def _download_extract_tool(rctx, tool_name, binary):
 
     templates.tool_tool(rctx, tool_name, "BUILD.bazel", {"{target_filename}": target_filename})
 
-def _workspace_hub_impl(rctx):
-    tools = lockfile.load_defs(rctx, rctx.attr.lockfiles)
-    templates.workspace(rctx, "BUILD.bazel", rctx.attr.hub_name, {})
-    templates.workspace(rctx, "tools.bzl", rctx.attr.hub_name, tools)
-
-_workspace_hub = repository_rule(
-    attrs = {
-        "hub_name": attr.string(mandatory = True),
-        "lockfiles": attr.label_list(mandatory = True, allow_files = True),
-    },
-    implementation = _workspace_hub_impl,
-)
-
 def _tool_repo_impl(rctx):
     _download_extract_tool(rctx, rctx.attr.tool_name, json.decode(rctx.attr.binary))
     templates.tool(rctx, "tools/BUILD.bazel")
