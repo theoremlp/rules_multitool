@@ -2,16 +2,18 @@
 
 load("//multitool/private:multitool.bzl", _hub = "bzlmod_hub")
 
+_DEFAULT_HUB_NAME = "multitool"
+
 hub = tag_class(
     attrs = {
-        "hub_name": attr.string(default = "multitool"),
+        "hub_name": attr.string(default = _DEFAULT_HUB_NAME),
         "lockfile": attr.label(mandatory = True, allow_single_file = True),
     },
 )
 
 def _extension(module_ctx):
     lockfiles = {
-        "multitool": [],
+        _DEFAULT_HUB_NAME: [],
     }
     for mod in reversed(module_ctx.modules):
         for h in mod.tags.hub:
