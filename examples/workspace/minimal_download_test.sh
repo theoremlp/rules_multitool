@@ -21,6 +21,7 @@ for file in target-determinator.darwin.arm64 target-determinator.linux.amd64 tar
   if [ "$file" != "$ALLOWED" ]; then
     cat >$DL_CONFIG <<EOF
 rewrite github.com/bazel-contrib/target-determinator/releases/download/([^/]+)/$file disallowed.build/\$1/$file
+rewrite github.com/cli/cli/releases/download/(.*) disallowed.build/\$1
 EOF
   fi
 done

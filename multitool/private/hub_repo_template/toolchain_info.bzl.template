@@ -29,7 +29,7 @@ def declare_toolchain(name, os, cpu, toolchain_type):
     ext = _extension(os)
     toolchain_info(
         name = "{name}_{os}_{cpu}_toolchain_info".format(name=name, os=os, cpu=cpu),
-        executable = "@@{hub_name}.{os}_{cpu}//tools/{name}:{os}_{cpu}_executable{ext}".format(name=name, os=os, cpu=cpu, ext=ext),
+        executable = "@@{hub_name}.{name}.{os}_{cpu}//tools/{name}:{os}_{cpu}_executable{ext}".format(name=name, os=os, cpu=cpu, ext=ext),
         os = os,
         cpu = cpu,
         ext = ext,

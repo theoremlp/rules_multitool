@@ -62,5 +62,10 @@ multitool(
     name = "multitool",
     lockfile = "//:multitool.lock.json",
 )
+
+# required since 0.15.0 to enable only downloading tools used by this workspace
+load("@multitool.workspace//:tools.bzl", "register_tools")
+
+register_tools()
 \`\`\`
 EOF

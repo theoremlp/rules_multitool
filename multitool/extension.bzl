@@ -1,6 +1,6 @@
 "multitool module extension"
 
-load("//multitool/private:multitool.bzl", _hub = "hub")
+load("//multitool/private:multitool.bzl", _hub = "bzlmod_hub")
 
 hub = tag_class(
     attrs = {
@@ -18,6 +18,7 @@ def _extension(module_ctx):
     _hub(
         name = "multitool",
         lockfiles = lockfiles,
+        module_ctx = module_ctx,
     )
 
 multitool = module_extension(
