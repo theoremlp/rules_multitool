@@ -6,8 +6,6 @@ _HUB_TOOL_TEMPLATE = "//multitool/private:hub_repo_tool_template/{filename}.temp
 _TOOL_TEMPLATE = "//multitool/private:tool_repo_template/{filename}.template"
 _TOOL_TOOL_TEMPLATE = "//multitool/private:tool_repo_tool_template/{filename}.template"
 
-_WORKSPACE_TEMPLATE = "//multitool/private:workspace_hub_repo_template/{filename}.template"
-
 def _render_tool(rctx, filename, substitutions = None):
     rctx.template(
         filename,
@@ -68,19 +66,15 @@ def _render_tool_repos(hub_name, tools):
         for binary in tool["binaries"]
     ])
 
-def _render_workspace(rctx, filename, hub_name, tools):
-    rctx.template(
-        filename,
-        Label(_WORKSPACE_TEMPLATE.format(filename = filename)),
-        substitutions = {
-            "{tool_repos}": _render_tool_repos(hub_name, tools),
-        },
-    )
+def _workspace_subs(hub_name, tools):
+    return {
+        "{tool_repos}": _render_tool_repos(hub_name, tools),
+    }
 
 templates = struct(
     hub = _render_hub,
     hub_tool = _render_hub_tool,
     tool = _render_tool,
     tool_tool = _render_tool_tool,
-    workspace = _render_workspace,
+    workspace_substitutions = _workspace_subs,
 )

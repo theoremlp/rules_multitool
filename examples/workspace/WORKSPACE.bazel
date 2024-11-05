@@ -9,6 +9,6 @@ multitool(
     lockfile = "//:multitool.lock.json",
 )
 
-load("@multitool.workspace//:tools.bzl", "register_tools")
+load("@multitool//:tools.bzl", "register_tools")
 
 register_tools()
