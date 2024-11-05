@@ -57,16 +57,24 @@ def _render_tool_repo(hub_name, tool_name, binary):
         "",
     ])
 
+def _render_tool_repos(hub_name, tools):
+    if len(tools) == 0:
+        # in the case the tool dict is empty, ensure the function body we're
+        # templating into is non-empty
+        return "    pass\n"
+
+    return "\n".join([
+        _render_tool_repo(hub_name, tool_name, binary)
+        for tool_name, tool in tools.items()
+        for binary in tool["binaries"]
+    ])
+
 def _render_workspace(rctx, filename, hub_name, tools):
     rctx.template(
         filename,
         Label(_WORKSPACE_TEMPLATE.format(filename = filename)),
         substitutions = {
-            "{tool_repos}": "\n".join([
-                _render_tool_repo(hub_name, tool_name, binary)
-                for tool_name, tool in tools.items()
-                for binary in tool["binaries"]
-            ]),
+            "{tool_repos}": _render_tool_repos(hub_name, tools),
         },
     )
 
