@@ -11,13 +11,7 @@ Multitool takes as input a JSON lockfile and emits the following repos:
          [tool-name]/
            BUILD.bazel            (export all *_executable files)
            [os]_[cpu]_executable  (a downloaded file or a symlink to a file in a
-                                   downloaded and extracted archive)
-
- - [hub].workspace:
-     Iff not running in bzlmod, a utility for registering the per-tool repos with Bazel.
-
-     The structure of this repo is:
-        tools.bzl         (a file containing one utility method, "register_tools")
+                                   downloaded and extracted archive)    
 
  - [hub]:
      This repository holds toolchain definitions for all tools in the provided
@@ -32,6 +26,7 @@ Multitool takes as input a JSON lockfile and emits the following repos:
            BUILD.bazel    (declares the toolchain_type and the executable tool target)
            tool.bzl       (scaffolding for the tool target and toolchain declarations in toolchains/BUILD.bazel)
        toolchain_info.bzl (common scaffolding for toolchain declarations)
+       tools.bzl          (a file containing one utility method, "register_tools", to support WORKSPACE users)
 
        (additional BUILD.bazel and a WORKSPACE file are included as required by Bazel)
 
@@ -226,6 +221,9 @@ def _multitool_hub_impl(rctx):
         "{defines}": "\n".join(defines),
     })
 
+    # workspace compat
+    templates.hub(rctx, "tools.bzl", templates.workspace_substitutions(rctx.attr.name, tools))
+
 _multitool_hub = repository_rule(
     attrs = {
         "lockfiles": attr.label_list(mandatory = True, allow_files = True),
@@ -244,7 +242,6 @@ def bzlmod_hub(name, lockfiles, module_ctx):
     """
 
     tools = lockfile.load_defs(module_ctx, lockfiles)
-
     for tool_name, tool in lockfile.sorted_defs(tools):
         for binary in tool["binaries"]:
             tool_repo(
@@ -269,9 +266,4 @@ def workspace_hub(name, lockfiles):
        lockfiles: a list of lockfile labels containing multitool lockfiles
     """
 
-    _workspace_hub(
-        name = "{name}.workspace".format(name = name),
-        hub_name = name,
-        lockfiles = lockfiles,
-    )
     _multitool_hub(name = name, lockfiles = lockfiles)
