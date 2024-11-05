@@ -105,9 +105,3 @@ A common pattern we recommend to further simplify invoking tools for repository 
 We provide a companion CLI [multitool](https://github.com/theoremlp/multitool) to help manage multitool lockfiles. The CLI supports basic updating of artifacts that come from GitHub releases, and may be extended in the future to support other common release channels.
 
 See [our docs](docs/automation.md) on configuring a GitHub Action to check for updates and open PRs periodically.
-
-### Using Multiple Hubs
-
-rules_multitool 0.16.0+ supports registering multiple multitool hubs.
-
-#### Multiple Hubs when using as a Bazel Module
