@@ -62,5 +62,10 @@ multitool(
     name = "multitool",
     lockfile = "//:multitool.lock.json",
 )
+
+# required since 0.15.0 to enable loading only the tools in use
+load("@multitool.workspace//:tools.bzl", "load_tools")
+
+load_tools()
 \`\`\`
 EOF
