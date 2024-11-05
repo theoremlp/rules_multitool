@@ -21,6 +21,11 @@ def _extension(module_ctx):
         module_ctx = module_ctx,
     )
 
+    return module_ctx.extension_metadata(
+        root_module_direct_deps = ["multitool"],
+        root_module_direct_dev_deps = [],
+    )
+
 multitool = module_extension(
     implementation = _extension,
     tag_classes = {
