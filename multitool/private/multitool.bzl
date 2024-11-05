@@ -251,7 +251,6 @@ def bzlmod_hub(name, lockfiles, module_ctx):
                 name = "{name}.{tool_name}.{os}_{cpu}".format(
                     name = name,
                     tool_name = tool_name,
-                    binary = json.encode(binary),
                     os = binary["os"],
                     cpu = binary["cpu"],
                 ),

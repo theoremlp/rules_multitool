@@ -44,7 +44,6 @@ def _render_tool_repo(hub_name, tool_name, binary):
     name = "{name}.{tool_name}.{os}_{cpu}".format(
         name = hub_name,
         tool_name = tool_name,
-        binary = json.encode(binary),
         os = binary["os"],
         cpu = binary["cpu"],
     )
