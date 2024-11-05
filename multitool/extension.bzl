@@ -24,6 +24,7 @@ def _extension(module_ctx):
     return module_ctx.extension_metadata(
         root_module_direct_deps = ["multitool"],
         root_module_direct_dev_deps = [],
+        reproducible = True,  # repo state is only a function of the lockfile
     )
 
 multitool = module_extension(
