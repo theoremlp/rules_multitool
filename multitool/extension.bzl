@@ -4,25 +4,31 @@ load("//multitool/private:multitool.bzl", _hub = "bzlmod_hub")
 
 hub = tag_class(
     attrs = {
+        "hub_name": attr.string(default = "multitool"),
         "lockfile": attr.label(mandatory = True, allow_single_file = True),
     },
 )
 
 def _extension(module_ctx):
-    lockfiles = []
+    lockfiles = {
+        "multitool": [],
+    }
     for mod in reversed(module_ctx.modules):
         for h in mod.tags.hub:
-            lockfiles.append(h.lockfile)
+            if h.hub_name in lockfiles:
+                lockfiles[h.hub_name].append(h.lockfile)
+            else:
+                lockfiles[h.hub_name] = [h.lockfile]
 
-    # TODO: we should be able to support multiple hubs
-    _hub(
-        name = "multitool",
-        lockfiles = lockfiles,
-        module_ctx = module_ctx,
-    )
+    for lockfile_name, lockfile_list in lockfiles.items():
+        _hub(
+            name = lockfile_name,
+            lockfiles = lockfile_list,
+            module_ctx = module_ctx,
+        )
 
     return module_ctx.extension_metadata(
-        root_module_direct_deps = ["multitool"],
+        root_module_direct_deps = lockfiles.keys(),
         root_module_direct_dev_deps = [],
         reproducible = True,  # repo state is only a function of the lockfile
     )

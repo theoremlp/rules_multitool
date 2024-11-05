@@ -62,6 +62,22 @@ use_repo(multitool, "multitool")
 
 Tools may then be accessed using `@multitool//tools/tool-name`.
 
+It's safe to call `multitool.hub(...)` multiple times, with multiple lockfiles. All lockfiles will be combined with a last-write-wins strategy.
+
+Lockfiles defined across modules and applying to the same hub (including implicitly to the default "multitool" hub) will be combined such that the priority follows a breadth-first search originatiung from the root module.
+
+It's possible to define multiple multitool hubs to group related tools together. To define an alternate hub:
+
+```python
+multitool.hub(hub_name = "alt_hub", lockfile = "//:other_tools.lock.json")
+use_repo(multitool, "alt_hub")
+
+# register the tools from this hub
+register_toolchains("@alt_hub//toolchains:all")
+```
+
+These alternate hubs also combine lockfiles according to the hub_name and follow the same merging rules as the default hub.
+
 ### Workspace Usage
 
 Instructions for using with WORKSPACE may be found in [release notes](https://github.com/theoremlp/rules_multitool/releases).
@@ -89,3 +105,9 @@ A common pattern we recommend to further simplify invoking tools for repository 
 We provide a companion CLI [multitool](https://github.com/theoremlp/multitool) to help manage multitool lockfiles. The CLI supports basic updating of artifacts that come from GitHub releases, and may be extended in the future to support other common release channels.
 
 See [our docs](docs/automation.md) on configuring a GitHub Action to check for updates and open PRs periodically.
+
+### Using Multiple Hubs
+
+rules_multitool 0.16.0+ supports registering multiple multitool hubs.
+
+#### Multiple Hubs when using as a Bazel Module
