@@ -15,12 +15,28 @@ def _extension(module_ctx):
     lockfiles = {
         _DEFAULT_HUB_NAME: [],
     }
+
+    root_module_direct_deps = {}
+    root_module_direct_dev_deps = {}
+
     for mod in reversed(module_ctx.modules):
         for h in mod.tags.hub:
             if h.hub_name in lockfiles:
                 lockfiles[h.hub_name].append(h.lockfile)
             else:
                 lockfiles[h.hub_name] = [h.lockfile]
+
+            if not module_ctx.is_dev_dependency(h):
+                root_module_direct_deps[h.hub_name] = 1
+            else:
+                root_module_direct_dev_deps[h.hub_name] = 1
+
+    # ensure _DEFAULT_HUB_NAME is present in non-dev and dev deps
+    # when non-dev and dev deps are non-empty.
+    if len(root_module_direct_deps) > 0:
+        root_module_direct_deps[_DEFAULT_HUB_NAME] = 1
+    if len(root_module_direct_dev_deps) > 0:
+        root_module_direct_dev_deps[_DEFAULT_HUB_NAME] = 1
 
     for lockfile_name, lockfile_list in lockfiles.items():
         _hub(
@@ -30,8 +46,8 @@ def _extension(module_ctx):
         )
 
     return module_ctx.extension_metadata(
-        root_module_direct_deps = lockfiles.keys(),
-        root_module_direct_dev_deps = [],
+        root_module_direct_deps = root_module_direct_deps.keys(),
+        root_module_direct_dev_deps = root_module_direct_dev_deps.keys(),
         reproducible = True,  # repo state is only a function of the lockfile
     )
 
