@@ -64,7 +64,7 @@ Tools may then be accessed using `@multitool//tools/tool-name`.
 
 It's safe to call `multitool.hub(...)` multiple times, with multiple lockfiles. All lockfiles will be combined with a last-write-wins strategy.
 
-Lockfiles defined across modules and applying to the same hub (including implicitly to the default "multitool" hub) will be combined such that the priority follows a breadth-first search originatiung from the root module.
+Lockfiles defined across modules and applying to the same hub (including implicitly to the default "multitool" hub) will be combined such that the priority follows a breadth-first search originating from the root module.
 
 It's possible to define multiple multitool hubs to group related tools together. To define an alternate hub:
 
