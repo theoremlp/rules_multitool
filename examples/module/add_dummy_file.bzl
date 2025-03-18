@@ -1,3 +1,5 @@
+"rule adding a dummy file to output, for test purpose"
+
 def _add_dummy_file(ctx):
     script = ctx.actions.declare_file(ctx.label.name)
     if ctx.executable.tool.extension == "exe":
