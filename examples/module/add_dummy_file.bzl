@@ -1,12 +1,12 @@
 "rule adding a dummy file to output, for test purpose"
 
 def _add_dummy_file(ctx):
-    script = ctx.actions.declare_file(ctx.label.name)
     if ctx.executable.tool.extension == "exe":
         content = "@%s %%*" % ctx.executable.tool.short_path
-        script = script + ".bat"
+        script = ctx.actions.declare_file(ctx.label.name + ".bat")
     else:
         content = '#!/usr/bin/env bash\nexec "%s" "$@"' % ctx.executable.tool.short_path
+        script = ctx.actions.declare_file(ctx.label.name)
     ctx.actions.write(script, content, is_executable = True)
 
     dummy_output_file = ctx.actions.declare_file(ctx.label.name + ".dummy")
