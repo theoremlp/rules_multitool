@@ -1,3 +1,6 @@
+load("@rules_multitool//multitool:cwd.bzl", "cwd")
+load("//:add_dummy_file.bzl", "add_dummy_file")
+
 sh_test(
     name = "integration_test",
     srcs = ["integration_test.sh"],
@@ -23,4 +26,23 @@ sh_test(
         "$(location @multitool//tools/target-determinator:workspace_root)",
     ],
     data = ["@multitool//tools/target-determinator:workspace_root"],
+)
+
+add_dummy_file(
+    name = "add_dummy_file",
+    tool = "@multitool//tools/target-determinator",
+)
+
+cwd(
+    name = "add_dummy_file_cwd",
+    tool = ":add_dummy_file",
+)
+
+sh_test(
+    name = "integration_test_add_dummy_file_cwd",
+    srcs = ["integration_test.sh"],
+    args = [
+        "$(location :add_dummy_file_cwd)",
+    ],
+    data = [":add_dummy_file_cwd"],
 )
