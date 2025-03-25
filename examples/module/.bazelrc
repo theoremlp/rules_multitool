@@ -10,3 +10,7 @@ startup --windows_enable_symlinks
 
 # off by default on windows, required for this module
 common --enable_runfiles
+
+# Don't rely on test logs being easily accessible from the test runner,
+# though it makes the log noisier.
+test --test_output=errors

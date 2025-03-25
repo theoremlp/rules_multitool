@@ -1,7 +1,7 @@
 "run_in provides a shared implementation for cwd and workspace_root execution"
 
 run_in_attrs = {
-    "tool": attr.label(mandatory = True, allow_single_file = True, executable = True, cfg = "exec"),
+    "tool": attr.label(mandatory = True, executable = True, cfg = "exec"),
     "_template_sh": attr.label(default = "//multitool/private:run_in.template.sh", allow_single_file = True),
     "_template_bat": attr.label(default = "//multitool/private:run_in.template.bat", allow_single_file = True),
 }
@@ -22,8 +22,8 @@ def run_in(ctx, env_var):
     # This algorithm requires --enable_runfiles (enabled by default on non-windows)
     template = ctx.file._template_sh
     wrapper_name = ctx.label.name
-    tool_short_path = ctx.file.tool.short_path
-    if ctx.file.tool.extension == "exe":
+    tool_short_path = ctx.executable.tool.short_path
+    if ctx.executable.tool.extension == "exe":
         template = ctx.file._template_bat
         wrapper_name = wrapper_name + ".bat"
         tool_short_path = tool_short_path.replace("/", "\\")
@@ -36,4 +36,4 @@ def run_in(ctx, env_var):
             "{{env_var}}": env_var,
         },
     )
-    return [DefaultInfo(executable = output, runfiles = ctx.runfiles(files = [ctx.file.tool]))]
+    return [DefaultInfo(executable = output, runfiles = ctx.attr.tool[DefaultInfo].default_runfiles)]
