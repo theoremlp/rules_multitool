@@ -2,7 +2,7 @@
 
 def _add_dummy_file(ctx):
     if ctx.executable.tool.extension == "exe":
-        content = "@%s %%*" % ctx.executable.tool.short_path
+        content = "@%s %%*" % ctx.executable.tool.short_path.replace("/", "\\")
         script = ctx.actions.declare_file(ctx.label.name + ".bat")
     else:
         content = '#!/usr/bin/env bash\nexec "%s" "$@"' % ctx.executable.tool.short_path
