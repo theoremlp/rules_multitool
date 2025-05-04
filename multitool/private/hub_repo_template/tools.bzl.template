@@ -1,4 +1,8 @@
 load("@rules_multitool//multitool/private:multitool.bzl", "tool_repo")
 
+TOOLS = {
+{tool_labels}
+}
+
 def register_tools():
 {tool_repos}
