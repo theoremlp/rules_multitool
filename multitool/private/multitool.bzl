@@ -208,8 +208,8 @@ def _multitool_hub_impl(rctx):
         "{defines}": "\n".join(defines),
     })
 
-    # workspace compat
-    templates.hub(rctx, "tools.bzl", templates.workspace_substitutions(rctx.attr.name, tools))
+    # workspace compat & list of all tools
+    templates.hub(rctx, "tools.bzl", templates.tools_substitutions(rctx.attr.name, tools))
 
 _multitool_hub = repository_rule(
     attrs = {

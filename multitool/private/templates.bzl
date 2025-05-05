@@ -38,6 +38,12 @@ def _render_hub_tool(rctx, tool_name, filename, substitutions = None):
         } | (substitutions or {}),
     )
 
+def _renter_tool_labels(tools):
+    return "\n".join([
+        "    \"{tool_name}\": Label(\"//tools/{tool_name}\"),".format(tool_name = tool_name)
+        for tool_name in tools.keys()
+    ])
+
 def _render_tool_repo(hub_name, tool_name, binary):
     name = "{name}.{tool_name}.{os}_{cpu}".format(
         name = hub_name,
@@ -66,8 +72,9 @@ def _render_tool_repos(hub_name, tools):
         for binary in tool["binaries"]
     ])
 
-def _workspace_subs(hub_name, tools):
+def _tools_subs(hub_name, tools):
     return {
+        "{tool_labels}": _renter_tool_labels(tools),
         "{tool_repos}": _render_tool_repos(hub_name, tools),
     }
 
@@ -76,5 +83,5 @@ templates = struct(
     hub_tool = _render_hub_tool,
     tool = _render_tool,
     tool_tool = _render_tool_tool,
-    workspace_substitutions = _workspace_subs,
+    tools_substitutions = _tools_subs,
 )
