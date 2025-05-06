@@ -86,19 +86,11 @@ Instructions for using with WORKSPACE may be found in [release notes](https://gi
 
 When running `@multitool//tools/tool-name`, Bazel will execute the tool at the root of the runfiles tree due to https://github.com/bazelbuild/bazel/issues/3325.
 
-To run a tool in the current working directory, use the convenience target `@multitool//tools/tool-name:cwd`.
+It's possible to workaround this:
+- To run a tool in the current working directory, use the convenience target `@multitool//tools/tool-name:cwd`.
+- To run a tool in the Bazel module or workspace root, use the convenience target `@multitool/tools/tool-name:workspace_root`.
 
-To run a tool in the Bazel module or workspace root, use the convenience target `@multitool/tools/tool-name:workspace_root`.
-
-A common pattern we recommend to further simplify invoking tools for repository users it to:
-
-1.  Create a `tools/` directory
-1.  Create an executable shell script `tools/_run_multitool.sh` with the following code:
-    ```sh
-    #!/usr/bin/env bash
-    bazel run "@multitool//tools/$( basename $0 ):cwd" -- "$@"
-    ```
-1.  Create symlinks of `tools/tool-name` to `tools/_run_multitool.sh`
+Alternatively, consider using https://registry.build/github/buildbuddy-io/bazel_env.bzl to put tools on the `PATH`.
 
 ### Keeping Tools Up-to-Date
 
