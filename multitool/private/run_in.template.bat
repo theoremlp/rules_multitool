@@ -1,3 +1,3 @@
 @set tool=%cd%\{{tool}}
-@cd %{{env_var}}%
+@cd /D %{{env_var}}%
 @%tool% %*
