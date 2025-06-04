@@ -1,10 +1,21 @@
 "multitool templating"
 
+load("@platforms//host:constraints.bzl", "HOST_CONSTRAINTS")
+
 _HUB_TEMPLATE = "//multitool/private:hub_repo_template/{filename}.template"
 _HUB_TOOL_TEMPLATE = "//multitool/private:hub_repo_tool_template/{filename}.template"
 
 _TOOL_TEMPLATE = "//multitool/private:tool_repo_template/{filename}.template"
 _TOOL_TOOL_TEMPLATE = "//multitool/private:tool_repo_tool_template/{filename}.template"
+
+# map from HOST_CONSTRAINTS to supported_os and supported_cpu from lockfile.schema.json
+_HOST_CONSTRAINTS_MAPPING = {
+    "@platforms//cpu:aarch64": "arm64",
+    "@platforms//cpu:x86_64": "x86_64",
+    "@platforms//os:osx": "macos",
+    "@platforms//os:linux": "linux",
+    "@platforms//os:windows": "windows",
+}
 
 def _render_tool(rctx, filename, substitutions = None):
     rctx.template(
@@ -39,9 +50,16 @@ def _render_hub_tool(rctx, tool_name, filename, substitutions = None):
     )
 
 def _renter_tool_labels(tools):
+    supported_host_constraints = [_HOST_CONSTRAINTS_MAPPING.get(constraint, None) for constraint in HOST_CONSTRAINTS]
+    host_tool_keys = [
+        tool_key
+        for tool_key, tool in tools.items()
+        if any([binary["os"] in supported_host_constraints and binary["cpu"] in supported_host_constraints for binary in tool["binaries"]])
+    ]
+
     return "\n".join([
         "    \"{tool_name}\": Label(\"//tools/{tool_name}\"),".format(tool_name = tool_name)
-        for tool_name in tools.keys()
+        for tool_name in host_tool_keys
     ])
 
 def _render_tool_repo(hub_name, tool_name, binary):
