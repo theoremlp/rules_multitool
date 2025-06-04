@@ -54,8 +54,7 @@ def _renter_tool_labels(tools):
     host_tool_keys = [
         tool_key
         for tool_key, tool in tools.items()
-        for binary in tool["binaries"]
-        if binary["os"] in supported_host_constraints and binary["cpu"] in supported_host_constraints
+        if any([binary["os"] in supported_host_constraints and binary["cpu"] in supported_host_constraints for binary in tool["binaries"]])
     ]
 
     return "\n".join([
