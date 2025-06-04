@@ -1,4 +1,5 @@
 load("@rules_multitool//multitool:cwd.bzl", "cwd")
+load("@rules_shell//shell:sh_test.bzl", "sh_test")
 load("//:add_dummy_file.bzl", "add_dummy_file")
 
 sh_test(
