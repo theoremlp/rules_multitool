@@ -4,10 +4,12 @@ bzl_library(
     name = "extension",
     srcs = ["extension.bzl"],
     visibility = ["//visibility:public"],
+    deps = ["//multitool/private:multitool"],
 )
 
 bzl_library(
     name = "multitool",
     srcs = ["multitool.bzl"],
     visibility = ["//visibility:public"],
+    deps = ["//multitool/private:multitool"],
 )
