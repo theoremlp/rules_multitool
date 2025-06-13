@@ -1,6 +1,13 @@
 "multitool templating"
 
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 load("@platforms//host:constraints.bzl", "HOST_CONSTRAINTS")
+load("@platforms//host:extension.bzl", "host_platform_repo")
+
+maybe(
+    host_platform_repo,
+    name = "host_platform",
+)
 
 _HUB_TEMPLATE = "//multitool/private:hub_repo_template/{filename}.template"
 _HUB_TOOL_TEMPLATE = "//multitool/private:hub_repo_tool_template/{filename}.template"
