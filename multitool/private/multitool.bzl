@@ -11,7 +11,7 @@ Multitool takes as input a JSON lockfile and emits the following repos:
          [tool-name]/
            BUILD.bazel            (export all *_executable files)
            [os]_[cpu]_executable  (a downloaded file or a symlink to a file in a
-                                   downloaded and extracted archive)    
+                                   downloaded and extracted archive)
 
  - [hub]:
      This repository holds toolchain definitions for all tools in the provided
