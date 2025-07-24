@@ -27,4 +27,5 @@ bzl_library(
     name = "templates",
     srcs = ["templates.bzl"],
     visibility = ["//multitool:__subpackages__"],
+    deps = ["@platforms//host:constraints_lib"],
 )
