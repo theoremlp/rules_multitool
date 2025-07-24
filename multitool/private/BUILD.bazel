@@ -1,4 +1,4 @@
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@aspect_bazel_lib//:bzl_library.bzl", "bzl_library")
 
 exports_files([
     "run_in.template.bat",
@@ -27,4 +27,5 @@ bzl_library(
     name = "templates",
     srcs = ["templates.bzl"],
     visibility = ["//multitool:__subpackages__"],
+    deps = ["@platforms//host:constraints_lib"],
 )
