@@ -33,7 +33,7 @@ The lockfile supports the following binary kinds:
   - `headers`: (optional) a string dictionary of headers to pass to the downloader
   - `auth_patterns`: (optional) a string dictionary for use with .netrc files as in https://bazel.build/rules/lib/repo/http#http_file-auth_patterns
 
-- **archive**: the URL referes to an archive to download, specify additional options:
+- **archive**: the URL refers to an archive to download, specify additional options:
 
   - `file`: executable file within the archive
   - `sha256`: the sha256 of the downloaded archive
